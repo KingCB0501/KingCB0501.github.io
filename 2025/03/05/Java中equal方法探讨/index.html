@@ -159,7 +159,49 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/Java中equal方法/HEAD.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">Java中equals方法探讨</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java中equals方法探讨</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-05T12:06:21.000Z" title="发表于 2025-03-05 20:06:21">2025-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-06T02:52:41.192Z" title="更新于 2025-03-06 10:52:41">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/BUAA-OO/">BUAA_OO</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Java中equals-方法探讨"><a href="#Java中equals-方法探讨" class="headerlink" title="Java中equals()方法探讨"></a>Java中equals()方法探讨</h1><h2 id="基本数据类型VS对象引用类型的相等性判断"><a href="#基本数据类型VS对象引用类型的相等性判断" class="headerlink" title="基本数据类型VS对象引用类型的相等性判断"></a>基本数据类型<code>VS</code>对象引用类型的相等性判断</h2><ul>
+}</script><style>
+  /* 仅文章页背景虚化 */
+  .post-page::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url(/images/footer_img.jpg) no-repeat center center;
+      background-size: cover;
+      filter: blur(10px);
+      z-index: -1;
+  }
+  /* 文章内容区域半透明遮罩 */
+  .post-page #content-inner {
+      background: rgba(255, 255, 255, 0.85) !important;
+      border-radius: 12px;
+      padding: 30px;
+      margin: 20px auto;
+      backdrop-filter: blur(3px);
+      position: relative;
+      z-index: 1;
+  }
+  /* 暗黑模式适配 */
+  [data-theme="dark"] .post-page #content-inner {
+      background: rgba(0, 0, 0, 0.7) !important;
+  }
+  [data-theme="dark"] .post-page::before {
+      filter: blur(10px) brightness(0.5);
+  }
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .post-page #content-inner {
+        padding: 15px;
+        margin: 10px auto;
+    }
+    .post-page::before {
+        filter: blur(5px);
+    }
+  }
+</style>
+<meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/Java中equal方法/HEAD.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">Java中equals方法探讨</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java中equals方法探讨</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-05T12:06:21.000Z" title="发表于 2025-03-05 20:06:21">2025-03-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-06T02:52:41.192Z" title="更新于 2025-03-06 10:52:41">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/BUAA-OO/">BUAA_OO</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Java中equals-方法探讨"><a href="#Java中equals-方法探讨" class="headerlink" title="Java中equals()方法探讨"></a>Java中equals()方法探讨</h1><h2 id="基本数据类型VS对象引用类型的相等性判断"><a href="#基本数据类型VS对象引用类型的相等性判断" class="headerlink" title="基本数据类型VS对象引用类型的相等性判断"></a>基本数据类型<code>VS</code>对象引用类型的相等性判断</h2><ul>
 <li>基本数据类型：<code>byte</code>、<code>char</code>、 <code>short</code>、 <code>int</code>、 <code>long</code>、 <code>float</code>、 <code>double</code><br>、 <code>boolean</code></li>
 <li>对象引用类型：简单来说就是<code>new</code>出来的对象的名称就是一个对象引用</li>
 </ul>
