@@ -1,0 +1,350 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>BUAA_2025_Unit1_表达式解析与递归下降 | KingCB</title><meta name="author" content="KingCB0501"><meta name="copyright" content="KingCB0501"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="BUAA_2025_Unit1_表达式解析与递归下降架构设计迭代第一次作业分析1.1UML类图 1.2架构分析进过对指导书的分析，我们不难将整个任务分为三部分  表达式的解析：负责将输入字符串进行处理，按最小逻辑处理单元分为有序的Token流，之后依据形式化表述进行Expr,Term,Factor的递归下降解析 表达式解析后的存储：依据指导书，将解析后的表达式利用容器存储为Expr,Term,Fa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUAA_2025_Unit1_表达式解析与递归下降">
+<meta property="og:url" content="https://kingcb0501.github.io/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/index.html">
+<meta property="og:site_name" content="KingCB">
+<meta property="og:description" content="BUAA_2025_Unit1_表达式解析与递归下降架构设计迭代第一次作业分析1.1UML类图 1.2架构分析进过对指导书的分析，我们不难将整个任务分为三部分  表达式的解析：负责将输入字符串进行处理，按最小逻辑处理单元分为有序的Token流，之后依据形式化表述进行Expr,Term,Factor的递归下降解析 表达式解析后的存储：依据指导书，将解析后的表达式利用容器存储为Expr,Term,Fa">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kingcb0501.github.io/images/OO_unit1/cover.jpg">
+<meta property="article:published_time" content="2025-03-22T14:38:10.000Z">
+<meta property="article:modified_time" content="2025-03-22T15:27:43.378Z">
+<meta property="article:author" content="KingCB0501">
+<meta property="article:tag" content="面向对象">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kingcb0501.github.io/images/OO_unit1/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "BUAA_2025_Unit1_表达式解析与递归下降",
+  "url": "https://kingcb0501.github.io/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/",
+  "image": "https://kingcb0501.github.io/images/OO_unit1/cover.jpg",
+  "datePublished": "2025-03-22T14:38:10.000Z",
+  "dateModified": "2025-03-22T15:27:43.378Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "KingCB0501",
+      "url": "https://kingcb0501.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon_img.jpg"><link rel="canonical" href="https://kingcb0501.github.io/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUAA_2025_Unit1_表达式解析与递归下降',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/OO_unit1/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">BUAA_2025_Unit1_表达式解析与递归下降</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">BUAA_2025_Unit1_表达式解析与递归下降</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-22T14:38:10.000Z" title="发表于 2025-03-22 22:38:10">2025-03-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-22T15:27:43.378Z" title="更新于 2025-03-22 23:27:43">2025-03-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">5.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>17分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="BUAA-2025-Unit1-表达式解析与递归下降"><a href="#BUAA-2025-Unit1-表达式解析与递归下降" class="headerlink" title="BUAA_2025_Unit1_表达式解析与递归下降"></a>BUAA_2025_Unit1_表达式解析与递归下降</h1><h2 id="架构设计迭代"><a href="#架构设计迭代" class="headerlink" title="架构设计迭代"></a>架构设计迭代</h2><h3 id="第一次作业分析"><a href="#第一次作业分析" class="headerlink" title="第一次作业分析"></a>第一次作业分析</h3><h4 id="1-1UML类图"><a href="#1-1UML类图" class="headerlink" title="1.1UML类图"></a>1.1UML类图</h4><p><img src="/images/OO_unit1/%E7%AC%AC%E4%B8%80%E5%8D%95%E5%85%83.drawio.png" alt="UML"></p>
+<h4 id="1-2架构分析"><a href="#1-2架构分析" class="headerlink" title="1.2架构分析"></a>1.2架构分析</h4><p>进过对指导书的分析，我们不难将整个任务分为三部分</p>
+<ul>
+<li>表达式的解析：负责将输入字符串进行处理，按最小逻辑处理单元分为有序的<code>Token</code>流，之后依据形式化表述进行<code>Expr</code>,<code>Term</code>,<code>Factor</code>的递归下降解析</li>
+<li>表达式解析后的存储：依据指导书，将解析后的表达式利用容器存储为<code>Expr</code>,<code>Term</code>,<code>Factor</code>,且各级存储均实现计算类的<code>toPoly()</code>方法</li>
+<li>计算类：此次作业要求展开括号，实际上都是多项式间的运算。我们可以将各级存储单元转为<code>Poly</code>,之后利用<code>Poly</code>的加法、乘法、幂运算进行计算</li>
+</ul>
+<h5 id="表达式的解析"><a href="#表达式的解析" class="headerlink" title="表达式的解析"></a>表达式的解析</h5><h6 id="输入预处理"><a href="#输入预处理" class="headerlink" title="输入预处理"></a>输入预处理</h6><p>在<code>Process</code>类中进行输入字符串的初步化简，主要包含以下几个方面</p>
+<ul>
+<li>去除空白项</li>
+<li>将连续正负号变为一个符号</li>
+<li>将<code>^+021</code>类似的<code>^</code>后面可能得正号去除掉</li>
+</ul>
+<h6 id="递归下降解析"><a href="#递归下降解析" class="headerlink" title="递归下降解析"></a>递归下降解析</h6><ul>
+<li><code>Token</code>：在<code>Token</code>类中包含了枚举类型<code>Type</code>,主要用于在<code>Lexer</code>中遍历输入时进行划分为最小处理单元并按照<code>Token</code>进行存储,例如</li>
+<li><code>Lexer</code>:遍历输入字符串，将输入划分为<code>Token</code>流，如<code>+</code>、<code>-</code>、<code>012&lt;num&gt;</code>等</li>
+<li><code>Parser</code>: 通过<code>ParserExpr()</code>、<code>ParserTerm()</code>、与<code>ParserFactor()</code>层层深入解析输入，分别返回<code>Expr</code>,<code>Term</code>,<code>Factor</code>,而幂函数因子、常数因子与表达式因子分别实现<code>Factor</code>接口</li>
+</ul>
+<blockquote>
+<p>在解析<code>Term</code>的时候，我为<code>Term</code>设置了<code>sign</code>来记录这一项的正负。但是我在第三次迭代时<code>Term</code>的求导方法实现中遗漏了符号处理。其实可以在解析存储时就可以将项的<code>-</code>号作为一个<code>-1</code>的因子添加到<code>factors</code>中</p>
+</blockquote>
+<h5 id="基本计算单元处理"><a href="#基本计算单元处理" class="headerlink" title="基本计算单元处理"></a>基本计算单元处理</h5><blockquote>
+<p> 分析形式化表述，我们可以得到所有存储层次都可以化为多项式的形式，而多项式又是单项式构成的</p>
+</blockquote>
+<p>单项式<code>Mono</code>与多项式<code>Poly</code>的设计形式如下，其中<code>Poly</code>中利用容器存储了<code>Mono</code><br>$$<br>mono &#x3D; ax^b<br>$$</p>
+<p>$$<br>poly &#x3D; \sum_{i&#x3D;1}^{n} a_{i}x^{b_{i}}<br>$$</p>
+<p>为<code>Expr</code>,<code>Term</code>,<code>Factor</code>等实现<code>toPoly()</code>方法，调用<code>expr.toPoly()</code>方法可以将整个输入转换为一个多项式</p>
+<ul>
+<li><p><code>Factor</code>的<code>toPoly()</code>:常数因子转换为只含有一个单项式的指数为0的多项式，幂函数转换为只含有一个单项式的系数为1的多项式。表达式因子的<code>toPoly()</code> 中先调用<code>base</code>的<code>toPoly()</code>方法得到一个多项式，再调用<code>Poly</code>的<code>powPoly(exp)</code>方法得到表达式因子的多项式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> base.toPoly().powPoly(<span class="built_in">this</span>.exp);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Term</code>的<code>toPoly()</code>：遍历所有<code>factor</code>，调用各因子的<code>toPoly</code>后使用<code>mulPoly</code>乘起来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Factor factor : factors) &#123;</span><br><span class="line">  poly = poly.mulPoly(factor.toPoly());    </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> poly;</span><br></pre></td></tr></table></figure>
+
+<p>此外，有一个细节需要注意，对<code>poly</code>可以先初始化成一个为<code>1</code>的多项式以及项的符号的处理</p>
+</li>
+<li><p><code>Expr</code>的<code>toPoly()</code>:将其含有的所有的项的<code>Poly</code>形式调用<code>addPoly</code>加起来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Term term : terms) &#123;</span><br><span class="line">  poly = poly.addPoly(factor.toPoly());    </span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> poly;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h6 id="计算单元分析"><a href="#计算单元分析" class="headerlink" title="计算单元分析"></a>计算单元分析</h6><ul>
+<li><p><code>Mono</code>:<code>coe</code>存储单项式的系数，<code>exp</code>存储单项式的指数，并且重写<code>toString()</code>方法，实现单项式的<code>coe*x^exp</code>形式的输出，输出优化可见后面优化部分</p>
+</li>
+<li><p><code>Poly</code>:使用容器存储<code>mono</code>,同样需要重写<code>toString</code>方法，使用<code>+</code>号将各<code>mono</code>的输出连接起来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1.addPoly</span></span><br><span class="line"><span class="type">Poly</span> <span class="variable">poly</span> <span class="operator">=</span> deepClone(<span class="built_in">this</span>);</span><br><span class="line"><span class="keyword">for</span>(Mono mono1 : other.getMonos()) &#123;</span><br><span class="line">    <span class="keyword">for</span>(Mono mono2 : poly.getMonos() ) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(mono2.getExp() == mono1.getExp()) &#123;    <span class="comment">// 此处可以在Mono中重equals方法，实现个性化比较，同时避免直接对外暴露指数</span></span><br><span class="line">            mono2.setCoe(mono2.getCoe().add(mono1.getCoe()));</span><br><span class="line">            flag = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(flag == <span class="number">0</span>) &#123;</span><br><span class="line">            poly.addMono(mono1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我在<code>Poly</code>的各个计算方法中，在运算前首先深克隆自身，再对克隆出来的对象做修改，不直接改变源对象本身</p>
+<p><code>Poly</code>的乘法依旧使用两层循环完成，幂运算调用乘法完成</p>
+<p><strong>注意同类项的合并</strong></p>
+</blockquote>
+</li>
+</ul>
+<h4 id="1-3Bug分析"><a href="#1-3Bug分析" class="headerlink" title="1.3Bug分析"></a>1.3<code>Bug</code>分析</h4><p>比较幸运的是，我自己在此次强测和互测中并没有出现<code>bug</code></p>
+<p>在第一次作业房间中，我利用评测机刀中了我们房间唯一一次，有一位同学的项目在输入字符串的最后如果有空白字符会报错。他是没有做预处理操作，而是在解析时会讨论该处有无空格，但似乎漏了字符串最后的空白字符。个人认为这样处理比较麻烦，且容易遗漏某处可能出现的空白字符。</p>
+<h4 id="1-4性能优化"><a href="#1-4性能优化" class="headerlink" title="1.4性能优化"></a>1.4性能优化</h4><h5 id="Mono中优化"><a href="#Mono中优化" class="headerlink" title="Mono中优化"></a>Mono中优化</h5><ul>
+<li><p>系数为0的时候直接返回空</p>
+</li>
+<li><p>指数为0，直接输出系数</p>
+</li>
+<li><p>系数为-1时候只输出<code>-</code>号，系数为1时候不输出</p>
+</li>
+<li><p>指数为1，不输出</p>
+<p>以上优先级依次递减</p>
+</li>
+</ul>
+<h5 id="Poly中优化"><a href="#Poly中优化" class="headerlink" title="Poly中优化"></a>Poly中优化</h5><p>如果Mono的toString为空则不做处理，不为空则用<code>+</code>号连接</p>
+<p>如果有正的项，一定将正的项放在前面，可以少一个<code>-</code>号</p>
+<p>如果最后答案为空，输出0</p>
+<h3 id="第二次作业分析"><a href="#第二次作业分析" class="headerlink" title="第二次作业分析"></a>第二次作业分析</h3><h4 id="2-1-UML类图"><a href="#2-1-UML类图" class="headerlink" title="2.1 UML类图"></a>2.1 UML类图</h4><p><img src="/images/OO_unit1/%E7%AC%AC%E4%BA%8C%E5%8D%95%E5%85%83.drawio.png" alt="第二单元UML类图"></p>
+<h4 id="2-2-三角函数与自定义递归函数迭代"><a href="#2-2-三角函数与自定义递归函数迭代" class="headerlink" title="2.2 三角函数与自定义递归函数迭代"></a>2.2 三角函数与自定义递归函数迭代</h4><p>分析指导书我们可以得到，此次的更新之处主要有新增三角函数因子，自定义递归函数</p>
+<h5 id="三角函数的解析与Mono最小处理单元的改变"><a href="#三角函数的解析与Mono最小处理单元的改变" class="headerlink" title="三角函数的解析与Mono最小处理单元的改变"></a>三角函数的解析与Mono最小处理单元的改变</h5><p>新增三<code>SinFactor</code>与<code>CosFactor</code>类，类中有两个成员变量——<code>factor</code>(记录三角函数括号内的因子)与<code>exp</code>（记录三角函数的指数部分）</p>
+<p>在<code>Parser</code>中新增<code>parseCosFactor()</code>和<code>parseSinFactor()</code>方法</p>
+<p>由于三角函数的引入，我们的最小处理单元不可以再是 <code>a*x^n</code>形式了，而是变成了</p>
+
+$$
+ax^n*\prod_{i=1}sin(factor_i)^{{exp}_i}*\prod_{j=1}cos(factor_j)^{{exp}_j}
+$$
+
+
+<p>在<code>Mono</code>中新增成员变量<code>sinMap</code>与<code>cosMap</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> HashMap&lt;String, Integer&gt; cosMap; <span class="comment">//所有cos括号里的内容及其指数</span></span><br><span class="line"><span class="keyword">private</span> HashMap&lt;String, Integer&gt; sinMap; <span class="comment">//所有sin括号里的内容及其指数</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>HashMap中的String字符串是<code>sinFactor</code>中的<code>factor.toPoly().toString()</code>方法得到的  </p>
+<p>由于后续<code>sin^2+cos^2=1</code>和二倍角的优化与sin括号中的内容(HashMap的键)息息相关，需要保证<code>mono</code>完全相同的多项式调用<code>toString()</code>输出的结果相同，我在<code>Poly</code>中设计了一个<code>rankChange()</code>方法调整<code>monos</code>的顺序，保证等价的多项式输出顺序一定。通过<code>toPoly().rankChange().toString()</code>方法输出字符串。</p>
+</blockquote>
+<p>在<code>Poly</code>类中调整<code>addPoly()</code>、<code>mulPoly()</code>、<code>powPoly()</code>方法细节。为了计算过程中识别同类项方便，我在<code>Mono</code>中重写了<code>equals()</code>与<code>hashCode()</code>方法，在两个<code>mono</code>的幂指数，<code>sin</code>与<code>cos</code>完全相同时返回真。</p>
+<h5 id="自定义递归函数解析"><a href="#自定义递归函数解析" class="headerlink" title="自定义递归函数解析"></a>自定义递归函数解析</h5><p>为了实现自定义函数的解析，我们设置了<code>Definer</code>工具类，用于实现自定义函数递归调用的解析</p>
+<p>成员变量<code>fnStr</code>,<code>f0Str</code>,<code>f1Str</code>分别记录递归函数的定义列表的<code>=</code>右边的部分</p>
+<p><code>fpa</code>记录形参列表，<code>paraNum</code>记录参数个数</p>
+<p>我们在Lexer中遍历解析时候，如果碰到字符<code>f</code>，则认为遇到了递归函数调用因子，我们依据形式化表述定义</p>
+
+$$
+f\{序号\}(factor1[,factor2])
+$$
+
+<p>解析出其中调用因子的序号<code>n</code>,以及参数列表，传递给<code>Definer</code>类中的<code>transform</code>方法，得到函数因子带入函数表达式后的结果字符串，在<code>Lexer</code>中用该结果字符串替换待解析表达式的函数调用因子，之后从原处继续遍历解析</p>
+<p><code>transform</code>方法基本如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_">transform</span><span class="params">(<span class="type">int</span> n, ArrayList&lt;String&gt;args)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">0</span> || n==<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">// 用实参列表args替换f0Str或者f1Str得到结果返回</span></span><br><span class="line">        replace str</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        ans = replace fnStr   <span class="comment">// 先将实参代入fnStr中</span></span><br><span class="line">        ...</span><br><span class="line">        str1 = transform(n-<span class="number">1</span>,args1)    <span class="comment">// 找出n-1的实参并进行递归调用</span></span><br><span class="line">        str2 = transform(n-<span class="number">2</span>,args2)</span><br><span class="line">        ans = repalce str1&amp;str2</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在自定义函数替换与解析时候，有以下几点需要注意</p>
+<ul>
+<li>在将实参代入函数初始表达式时候，一定要给实参套上<code>()</code></li>
+<li>将<code>transform</code>结果替换至表达式原函数调用因子处时，也要套上<code>()</code></li>
+<li>识别实参时，<code>,</code>一定识别准确，确保其不属于外层函数调用的某一个实参因子</li>
+<li>如果是两个参数的自定义函数，替换实参时一定要设置好过渡字符。例如形参列表<code>(y,x)</code>，在将<code>y</code>换为第一个带<code>x</code></li>
+</ul>
+<p>的实参后，如果直接再将<code>x</code>换位第二个实参，会导致将第一个实参代入产生的<code>x</code>也替换为第二个实参。</p>
+<h4 id="2-3BUG分析"><a href="#2-3BUG分析" class="headerlink" title="2.3BUG分析"></a>2.3<code>BUG</code>分析</h4><p>我在此次作业的强测和互测中均出现了<code>bug</code>,主要是由输出格式问题引起的<code>format error</code></p>
+<p>对于<code>sin()</code>及<code>cos()</code>输出时候,如果括号中的不是一个因子，需要再套一层括号。为此，我设计了一个<code>isFactor</code>方法，在表达式只有一个项并且这个项只有一个因子时候返回真。但是对于项中只有一个因子并且该项同时有一个符号时，例如<code>sin(-x)</code>错误的判断为了因子，没有加应有的括号。</p>
+<p>还有一个由于二倍角优化的<code>bug</code>可以见下面优化处详解</p>
+<p>在互测环节中，我针对上述自定义函数解析时候注意点构造了对应测试样例，例如<code>f&#123;2&#125;(f&#123;1&#125;(x^2,x^4,x^3)</code>等；还利用了测评机进行了自动化测试。</p>
+<h4 id="2-4输出优化"><a href="#2-4输出优化" class="headerlink" title="2.4输出优化"></a>2.4输出优化</h4><p>此次作业的优化主要是针对三角函数进行的，我进行了<code>2sin(x)cos(x)=sin(2x)</code>以及<code>a*m*cos(x)^2+b*m*sin(x)^2 =(a-b)*m*cos(x)^2+bm </code>的化简</p>
+<p>还有<code>sin(0)</code>与<code>cos(0)</code>的输出优化</p>
+<h5 id="二倍角化简"><a href="#二倍角化简" class="headerlink" title="二倍角化简"></a>二倍角化简</h5><p>我在<code>Mono</code>中增加了<code>simplify()</code>方法进行二倍角化简，伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Mono <span class="title function_">simplify</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(sinMap == <span class="literal">null</span> || cosMap == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span> (String s : <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(sinMap.keySet())) &#123;</span><br><span class="line">        <span class="keyword">if</span>(coe is not even number) <span class="keyword">return</span>; <span class="comment">// 系数不是偶数，直接返回</span></span><br><span class="line">        <span class="keyword">if</span>(sinMap.get(s) == <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span>(cosMap.containsKey(s) &amp;&amp; cosMap.get(s)!=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="type">int</span> sinExp,cosExp,minExp; </span><br><span class="line">        <span class="keyword">if</span>(coe含有因子<span class="number">2</span>的最大个数大于minExp)&#123; <span class="comment">// 确保此次化简至少可以减少sin或者cos</span></span><br><span class="line">            ...</span><br><span class="line">            cnt次二倍角</span><br><span class="line">            ...</span><br><span class="line">            sinMap.put(sin(2x),cnt); </span><br><span class="line">        &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="sin-2-cos-2化简"><a href="#sin-2-cos-2化简" class="headerlink" title="sin^2+cos^2化简"></a><code>sin^2+cos^2</code>化简</h5><p>我是在<code>Poly</code>的<code>addMono()</code>方法中进行该部分的化简，在每次为多项式加上一个单项式均会检查是否可以进行相应化简，但是该方法也导致了我第三次作业中一个测试点<code>TLE</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addMono</span><span class="params">(Mono other)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (Mono mono: <span class="built_in">this</span>.monos) &#123;</span><br><span class="line">        <span class="keyword">for</span>(String s : mono.sinMap.keySet())&#123;</span><br><span class="line">            <span class="keyword">if</span>(mono 除去sin(s)^<span class="number">2</span> 并且 other除去cos(s)^<span class="number">2</span>的equals()为真) &#123;</span><br><span class="line">                <span class="comment">// 前提是mono与other还有相应因子，equals不比较系数</span></span><br><span class="line">                <span class="comment">// mono = a*m*sin(s)^2 &amp;&amp; other = b*m*cos(s)^2</span></span><br><span class="line">                <span class="comment">//  a*m*sin(s)^2 +  b*m*cos(s)^2 = (a-b)*m*sin(s)^2+b*m</span></span><br><span class="line">                mono.coe = a-b; other = b*m;</span><br><span class="line">                monos.add(other);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>&#123;</span><br><span class="line">            遍历cosMap</span><br><span class="line">            <span class="title function_">if</span><span class="params">(...)</span>&#123;... <span class="keyword">return</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    monos.add(other)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="优化带来的bug"><a href="#优化带来的bug" class="headerlink" title="优化带来的bug"></a>优化带来的bug</h5><p>由于我在二倍角优化结束之后直接利用了<code>HashMap.put()</code>方法将产生的<code>sin(2x)</code>加入<code>sinMap</code>中，但这会导致<code>sinMap</code>原有的<code>sin(2x)</code>项被覆盖，导致错误。例如输入<code>4*sin(2)*sin(1)*cos(1)</code>会输出<code>2*sin(2)</code>。我之后做了如下修改：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sinMap.put(expr.toPoly().rankChange().toString(),</span><br><span class="line">        !sinMap.containsKey(expr.toPoly().rankChange().toString()) ? cnt :</span><br><span class="line">                sinMap.get(expr.toPoly().rankChange().toString()) + cnt);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>虽然是第二次迭代产生的<code>bug</code>,但是它活过了第二次以及第三次作业的强测和第二次作业A房的狂轰乱炸，在第三次作业互测中不幸落败。非常感谢帮我发现这个<code>bug</code>的同学，我对<code>hashMap</code>的使用又谨慎了一点。</p>
+</blockquote>
+<h3 id="第三次作业分析"><a href="#第三次作业分析" class="headerlink" title="第三次作业分析"></a>第三次作业分析</h3><h4 id="3-1UML类图"><a href="#3-1UML类图" class="headerlink" title="3.1UML类图"></a>3.1UML类图</h4><p><img src="/images/OO_unit1/%E7%AC%AC%E4%B8%89%E6%AC%A1%E4%BD%9C%E4%B8%9A.drawio.png" alt="第三次作业"></p>
+<h4 id="3-2自定义普通函数与表达式求导"><a href="#3-2自定义普通函数与表达式求导" class="headerlink" title="3.2自定义普通函数与表达式求导"></a>3.2自定义普通函数与表达式求导</h4><h5 id="自定义普通函数"><a href="#自定义普通函数" class="headerlink" title="自定义普通函数"></a>自定义普通函数</h5><p>与自定义普通函数类似，我新建了<code>NormalFunc</code>类，在其中存储了自定义函数的函数表达式以及形参列表，形参个数，实现<code>transform()</code>方法，在<code>Lexer</code>中遇到自定义函数后识别实参传给<code>transform()</code>并将传回的字符串替换至原有自定义普通函数因子调用处</p>
+<h5 id="求导的实现"><a href="#求导的实现" class="headerlink" title="求导的实现"></a>求导的实现</h5><ul>
+<li><p><code>Factor</code>的求导：方法定义为<code>public Term derive()</code>,因子各自实现</p>
+</li>
+<li><p><code>Term</code>的求导：伪代码如下(<del>感觉也不伪了</del>)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Expr <span class="title function_">derive</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">Expr</span> <span class="variable">expr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Expr</span>();</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;factors.size();i++)&#123;</span><br><span class="line">        <span class="type">Term</span> <span class="variable">term</span> <span class="operator">=</span> factors.get(i).derive();</span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>;j&lt;factors.size();j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i!=j)</span><br><span class="line">                term.addFactor(factors.get(j))</span><br><span class="line">        &#125;</span><br><span class="line">        expr.addTerm(term);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> expr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Expr</code>的求导：遍历<code>terms</code>，将每个<code>term</code>求导的结果用<code>mergeEexpr()</code>合并起来</p>
+</li>
+</ul>
+<h4 id="3-3BUG分析"><a href="#3-3BUG分析" class="headerlink" title="3.3BUG分析"></a>3.3<code>BUG</code>分析</h4><p>很不幸，我又出现了<code>bug</code>(中测截止前没有好好测试，在互测中自己随便捏的第三个测试点就测出了自己的<code>bug</code>)</p>
+<p>问题还是出在了<code>Term</code>的<code>sign</code>符号位上了：在对<code>Term</code>求导时不仅要对<code>factors</code>的因子求导，还有前面的<code>符号位</code>也要求导，导致了符号为负的项的求导全部是错的</p>
+<p>互测中，我还是着重对<code>sin(0)</code>以及<code>sin(3*x-x*3)</code>等类似自己写作业时感觉容易出错的地方进行了针对性测试</p>
+<h5 id="3-4输出优化"><a href="#3-4输出优化" class="headerlink" title="3.4输出优化"></a>3.4输出优化</h5><p>与第二次作业基本相同</p>
+<h3 id="缺点分析"><a href="#缺点分析" class="headerlink" title="缺点分析"></a>缺点分析</h3><ul>
+<li><strong>接口实现</strong> <code>Term</code>和<code>Expr</code>也实现了与因子相同的<code>toPoly()</code>方法与<code>derive()</code>方法，三个层次结构完全可以通过一个接口同一管理，而因子类再单独实现一个接口进行对因子类的统一管理(或者不实现，就用统一接口进行管理)</li>
+<li><strong>封装不完善</strong>：在个别类的成员变量中，甚至同时实现了<code>get()</code>和<code>set()</code>方法，<del>这还要private干什么</del> ,。为了安全性考虑，同时需要通过状态转化使得<code>get</code>方法得到的状态变量与存储的成员变量并不完全是同一种形式，也就是<strong>对外展现与内部存储形式不统一</strong></li>
+</ul>
+<h3 id="新的迭代场景中的可扩展性"><a href="#新的迭代场景中的可扩展性" class="headerlink" title="新的迭代场景中的可扩展性"></a>新的迭代场景中的可扩展性</h3><p>考虑<a target="_blank" rel="noopener" href="https://hyggge.github.io/2022/03/24/oo/oo-di-yi-dan-yuan-zong-jie/#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90">学长博客</a> 中提到了求和函数的解析，给出求和符号标志和求和上下界以及待求和因子的形式，我认为在当前作业架构中比较容易实现。</p>
+<p>实现一个<code>sumFuncFactor</code>类，存有成员<code>start</code>,<code>end</code>,<code>factorString</code>和<code>ansString</code>分别代表上下界以及待求和字符串形式的因子和字符串形式的求和结果。在其中实现<code>sum()</code>方法和<code>parse()</code>方法，前者利用字符串替换和循环求出<code>ansString</code>，然后利用<code>parse()</code>解析为一个<code>exprFactor</code>对象并返回。在<code>parser</code>中新增<code>parsesumFuncFactor()</code>方法，利用识别到的参数构造出一个<code>sumFuncFactor</code>对象,调用其<code>parse()</code>方法得到一个因子，加入到项中，实现层次化解析。</p>
+<h2 id="BUG分析总结"><a href="#BUG分析总结" class="headerlink" title="BUG分析总结"></a>BUG分析总结</h2><p>由前面三次作业的<code>bug</code>分析可得，我的<code>bug</code>来源主要来自于以下两个方面</p>
+<ul>
+<li>对于<code>Term</code>的符号位的处理：<code>hw2</code>中对于符号为负的只含有一个因子的项的输出格式错误(是<code>Mono</code>中的<code>isFactor()</code>方法问题)，<code>hw3</code>中项的求导没有充分考虑符号位(<code>Term</code>中的<code>derive()</code>方法)。但是这个错误完全可以通过在解析时候为该项多添一个<code>-1</code>的因子来解决，方便简洁</li>
+<li>三角函数优化产生的问题：在<code>Mono</code>的<code>simpify()</code>方法中简单粗暴的<code>HashMap.put()</code>导致原有数据的覆盖。</li>
+</ul>
+<p>总而言之，以上出现的<code>bug</code>完全可以通过更好的细节处理来实现</p>
+<p>我在互测当中主要通过评测机以及针对自己认为的易错点进行针对性构造样例测试，并未根据被测程序结构来设计测试样例。</p>
+<h2 id="程序结构的度量"><a href="#程序结构的度量" class="headerlink" title="程序结构的度量"></a>程序结构的度量</h2><h3 id="Statistic代码规模统计"><a href="#Statistic代码规模统计" class="headerlink" title="Statistic代码规模统计"></a>Statistic代码规模统计</h3><p><img src="/images/OO_unit1/statistic%E4%BB%A3%E7%A0%81%E8%A7%84%E6%A8%A1%E7%BB%9F%E8%AE%A1.png" alt="代码规模统计"></p>
+<p>如图可以看出，此次作业的代码行数达到了<strong>1361</strong>行，可能是我写字数的最多的作业了（OO作业是真养人啊）。从中可以看出<code>Mono</code>和<code>Poly</code>,<code>Parser</code>等计算类和解析类的代码行数比较多，这当然与其<code>伟大的职责</code>密不可分了。相反的，<code>Factor</code>以及<code>Term</code>等存储类的代码规模就比较小了。</p>
+<p>从中可以看出<code>Comment Lines</code>占比比较小，可能注释的并不充分，希望在之后的OO作业中有所改善。</p>
+<h3 id="Method-metrics复杂度分析"><a href="#Method-metrics复杂度分析" class="headerlink" title="Method metrics复杂度分析"></a><code>Method metrics</code>复杂度分析</h3><ul>
+<li><strong>CogC认知复杂度</strong>:衡量理解代码所需的认知努力，通过计算代码中的嵌套结构和逻辑操作来评估复杂性</li>
+<li><strong>ev(G)基本复杂度</strong>：表示代码中不可化简的复杂度，衡量控制流路径的数量</li>
+<li><strong>iv(G)设计复杂度</strong>：评估代码的设计质量，衡量模块之间的依赖关系。</li>
+<li><strong>v(G)圈复杂度</strong>：衡量代码独立路径的复杂度，与跳转和分支结构相关。该复杂度越高，测试和维护越困难</li>
+<li><strong>OCavg平均操作复杂度</strong>：类中每个方法的平均圈复杂度</li>
+<li><strong>OCmax最大操作复杂度</strong>:类中单个方法的最高圈复杂度</li>
+<li><strong>WMC类的加权方法复杂度</strong>：类中所有方法的加权复杂度之和</li>
+</ul>
+<p>由于项目中方法太多，截取其中复杂度过高的加以分析介绍</p>
+<p><img src="/images/OO_unit1/%E7%B1%BB%E5%A4%8D%E6%9D%82%E5%BA%A6.png" alt="类复杂度"></p>
+<p><img src="/images/OO_unit1/Method_Metrics_1.png" alt="Method_Metrics_1"></p>
+<p><img src="/images/OO_unit1/Method_Metric_2.png" alt="Method_Metrics_2"></p>
+<p>摘取复杂度较高的加以分析：</p>
+<ul>
+<li><strong>cmp.Mono.toSTring()</strong>:该方法是重写了<code>Mono</code>的<code>toString</code>方法，在其中实现了对于系数为正负一和0，指数为0和1，sin和cos中的因子为1的特殊情况的输出，分支结构较多，使得其复杂度较高</li>
+<li><strong>cmp.Mono.sympify()&amp;&amp;cmp.Poly.addMono()</strong>:在两分法中分别实现了二倍角和<code>sin^2+cos^2=1</code>等的三角函数的化简，在其中有较多的循环遍历结构与分支判断和跳转等</li>
+<li><strong>main.Definer.transform()</strong>：该方法进行了自定义递归函数的解析，是一个递归调用结构，有复杂的实参和形参识别与转换的问题，方法的复杂度较高</li>
+<li>…</li>
+</ul>
+<p><strong>类间的耦合分析</strong></p>
+<p><code>Mono</code>与<code>Poly</code>类中的复杂度指标均比较高，其承担了主要的计算功能，与所有的存储类均有关系。所有的存储类对象均转换为计算类对象加以分析计算，相互之间耦合度较高</p>
+<p><code>Lexer</code>中的复杂度也较高，其在遍历划分最小处理单元阶段就调用<code>Definer.transform()</code>方法进行化简，可能使得代码架构不清楚，反而增加了两个类的耦合度。完全可以将递归函数调用因子的解析交由<code>Parser</code>完成，这也与<code>Lexer</code>和<code>Parser</code>的类的功能定位相同</p>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><p>本单元的学习并不轻松但也没有过于搞人心态。在第一次作业开始搭建前，我参考了作业训练，OOPre以及众多学长学姐的博客，进行了不错的代码架构，使得我并没有在之后作业中进行重构，整个单元的工作量并不是很大。</p>
+<p>第二次作业迭代难度较大，既要进行架构调整还要进行三角函数优化。用我半成品的评测机课下测出了较多的bug并修改后，当我以为万事大吉的时候，又倒在了输出格式的问题上。第三次作业较为简单，在一个晚上速通之后自信心爆喷，没有进行充分的测试，直接喜提第一单元最低分。我认为OO作业的工作量可能不止来源于码字，还有测试。对于我这个评测机小白来说，写出来测试点生成逻辑已经耗尽所有心力。希望下个单元能和同学一起开发出一个合适的测评机，让我在强测和互测中不要过分狼狈。</p>
+<p>感谢OO课上实验的不杀之恩（虽然并不完全确定课上实验做的是否完全正确，但起码没有CO实验带给我的巨大心理压力）</p>
+<h2 id="未来方向"><a href="#未来方向" class="headerlink" title="未来方向"></a>未来方向</h2><p>总的来说，第一单元难度并不是很大，开学初大家课余时间也相对充裕。希望课程组可以在这段时间可以多出一些评测机搭建教程，方便评测机小白学习。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://KingCB0501.github.io">KingCB0501</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kingcb0501.github.io/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/">https://kingcb0501.github.io/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://KingCB0501.github.io" target="_blank">KingCB</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a></div><div class="post-share"><div class="social-share" data-image="/images/OO_unit1/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/03/05/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95%E6%8E%A2%E8%AE%A8/" title="Java中equals方法探讨"><img class="cover" src="/images/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95/HEAD.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Java中equals方法探讨</div></div><div class="info-2"><div class="info-item-1">Java中equals()方法探讨基本数据类型VS对象引用类型的相等性判断 基本数据类型：byte、char、 short、 int、 long、 float、 double、 boolean 对象引用类型：简单来说就是new出来的对象的名称就是一个对象引用  基本数据类型的相等性判断特点：直接比较值是否相等，使用==运算符 123int a = 5;int b = 5;System.out.println(a == b); // true（值相等）  基本数据类型的变量直接存储值，==直接比较两个变量的二进制值是否相等  对象引用类型的相等性判断对象引用类型的变量相等于一个指针，利用==相当于比较“这个指针变量”的值（是一个“地址”）是否相同，而利用equals方法类似于对C语言中指针解引用之后判断指针所指向的地方的内容是否相等，并且可以重写equals()方法（个人理解，有错勿喷）  ==运算符：比较内存地址  123456String s1 = new String(&quot;hello&quot;);String s2 = new...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">KingCB0501</div><div class="author-info-description">面朝大海, 春暖花开</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/KingCB0501"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D"><span class="toc-number">1.</span> <span class="toc-text">BUAA_2025_Unit1_表达式解析与递归下降</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E8%BF%AD%E4%BB%A3"><span class="toc-number">1.1.</span> <span class="toc-text">架构设计迭代</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">第一次作业分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1UML%E7%B1%BB%E5%9B%BE"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">1.1UML类图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">1.2架构分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.1.2.1.</span> <span class="toc-text">表达式的解析</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.1.2.1.1.</span> <span class="toc-text">输入预处理</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.1.2.1.2.</span> <span class="toc-text">递归下降解析</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83%E5%A4%84%E7%90%86"><span class="toc-number">1.1.1.2.2.</span> <span class="toc-text">基本计算单元处理</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.2.2.1.</span> <span class="toc-text">计算单元分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3Bug%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">1.3Bug分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">1.4性能优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Mono%E4%B8%AD%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.1.4.1.</span> <span class="toc-text">Mono中优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Poly%E4%B8%AD%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.1.4.2.</span> <span class="toc-text">Poly中优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90"><span class="toc-number">1.1.2.</span> <span class="toc-text">第二次作业分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-UML%E7%B1%BB%E5%9B%BE"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">2.1 UML类图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E8%BF%AD%E4%BB%A3"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">2.2 三角函数与自定义递归函数迭代</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E8%A7%92%E5%87%BD%E6%95%B0%E7%9A%84%E8%A7%A3%E6%9E%90%E4%B8%8EMono%E6%9C%80%E5%B0%8F%E5%A4%84%E7%90%86%E5%8D%95%E5%85%83%E7%9A%84%E6%94%B9%E5%8F%98"><span class="toc-number">1.1.2.2.1.</span> <span class="toc-text">三角函数的解析与Mono最小处理单元的改变</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%80%92%E5%BD%92%E5%87%BD%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.2.2.2.</span> <span class="toc-text">自定义递归函数解析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3BUG%E5%88%86%E6%9E%90"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">2.3BUG分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4%E8%BE%93%E5%87%BA%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">2.4输出优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C%E5%80%8D%E8%A7%92%E5%8C%96%E7%AE%80"><span class="toc-number">1.1.2.4.1.</span> <span class="toc-text">二倍角化简</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sin-2-cos-2%E5%8C%96%E7%AE%80"><span class="toc-number">1.1.2.4.2.</span> <span class="toc-text">sin^2+cos^2化简</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E5%B8%A6%E6%9D%A5%E7%9A%84bug"><span class="toc-number">1.1.2.4.3.</span> <span class="toc-text">优化带来的bug</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90"><span class="toc-number">1.1.3.</span> <span class="toc-text">第三次作业分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1UML%E7%B1%BB%E5%9B%BE"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">3.1UML类图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2%E8%87%AA%E5%AE%9A%E4%B9%89%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%AF%BC"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">3.2自定义普通函数与表达式求导</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%99%AE%E9%80%9A%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.3.2.1.</span> <span class="toc-text">自定义普通函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B1%82%E5%AF%BC%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.1.3.2.2.</span> <span class="toc-text">求导的实现</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3BUG%E5%88%86%E6%9E%90"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">3.3BUG分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4%E8%BE%93%E5%87%BA%E4%BC%98%E5%8C%96"><span class="toc-number">1.1.3.3.1.</span> <span class="toc-text">3.4输出优化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%E5%88%86%E6%9E%90"><span class="toc-number">1.1.4.</span> <span class="toc-text">缺点分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%9C%BA%E6%99%AF%E4%B8%AD%E7%9A%84%E5%8F%AF%E6%89%A9%E5%B1%95%E6%80%A7"><span class="toc-number">1.1.5.</span> <span class="toc-text">新的迭代场景中的可扩展性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BUG%E5%88%86%E6%9E%90%E6%80%BB%E7%BB%93"><span class="toc-number">1.2.</span> <span class="toc-text">BUG分析总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E7%9A%84%E5%BA%A6%E9%87%8F"><span class="toc-number">1.3.</span> <span class="toc-text">程序结构的度量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Statistic%E4%BB%A3%E7%A0%81%E8%A7%84%E6%A8%A1%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.3.1.</span> <span class="toc-text">Statistic代码规模统计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Method-metrics%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-number">1.3.2.</span> <span class="toc-text">Method metrics复杂度分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">心得体会</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-number">1.5.</span> <span class="toc-text">未来方向</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降"><img src="/images/OO_unit1/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA_2025_Unit1_表达式解析与递归下降"/></a><div class="content"><a class="title" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降">BUAA_2025_Unit1_表达式解析与递归下降</a><time datetime="2025-03-22T14:38:10.000Z" title="发表于 2025-03-22 22:38:10">2025-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/05/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95%E6%8E%A2%E8%AE%A8/" title="Java中equals方法探讨"><img src="/images/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95/HEAD.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java中equals方法探讨"/></a><div class="content"><a class="title" href="/2025/03/05/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95%E6%8E%A2%E8%AE%A8/" title="Java中equals方法探讨">Java中equals方法探讨</a><time datetime="2025-03-05T12:06:21.000Z" title="发表于 2025-03-05 20:06:21">2025-03-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/02/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式"><img src="/images/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/%E5%8D%9A%E5%AE%A2%E9%85%8D%E5%A4%B4%E5%9B%BE.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="正则表达式"/></a><div class="content"><a class="title" href="/2025/03/02/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="正则表达式">正则表达式</a><time datetime="2025-03-02T13:11:18.000Z" title="发表于 2025-03-02 21:11:18">2025-03-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/OO_unit1/cover.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By KingCB0501</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="9125417643" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
