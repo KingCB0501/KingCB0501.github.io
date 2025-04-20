@@ -1,0 +1,363 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>BUAA_OO_Unit2_多线程电梯调度 | KingCB</title><meta name="author" content="KingCB0501"><meta name="copyright" content="KingCB0501"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="BUAA_2025_Unit2_多线程电梯调度在正式开始之前，我们先简单回顾一下三次作业：  输入指定电梯的乘客请求，利用生产者-消费模式实现乘客运算 增加调度请求，不再指定乘客电梯，新增receive约束 实现双轿厢电梯改造  第一次作业分析1.1 UML类图 1.2架构分析通过对指导书的分析，我们可以将任务分为三个线程：  InputHandler： 输入处理线程，将输入请求存储到主队列。 S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUAA_OO_Unit2_多线程电梯调度">
+<meta property="og:url" content="https://kingcb0501.github.io/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/index.html">
+<meta property="og:site_name" content="KingCB">
+<meta property="og:description" content="BUAA_2025_Unit2_多线程电梯调度在正式开始之前，我们先简单回顾一下三次作业：  输入指定电梯的乘客请求，利用生产者-消费模式实现乘客运算 增加调度请求，不再指定乘客电梯，新增receive约束 实现双轿厢电梯改造  第一次作业分析1.1 UML类图 1.2架构分析通过对指导书的分析，我们可以将任务分为三个线程：  InputHandler： 输入处理线程，将输入请求存储到主队列。 S">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kingcb0501.github.io/images/avatar_img.jpg">
+<meta property="article:published_time" content="2025-04-20T15:47:50.000Z">
+<meta property="article:modified_time" content="2025-04-20T15:48:45.735Z">
+<meta property="article:author" content="KingCB0501">
+<meta property="article:tag" content="面向对象">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kingcb0501.github.io/images/avatar_img.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "BUAA_OO_Unit2_多线程电梯调度",
+  "url": "https://kingcb0501.github.io/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/",
+  "image": "https://kingcb0501.github.io/images/avatar_img.jpg",
+  "datePublished": "2025-04-20T15:47:50.000Z",
+  "dateModified": "2025-04-20T15:48:45.735Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "KingCB0501",
+      "url": "https://kingcb0501.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon_img.jpg"><link rel="canonical" href="https://kingcb0501.github.io/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'BUAA_OO_Unit2_多线程电梯调度',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/top_img.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">BUAA_OO_Unit2_多线程电梯调度</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">BUAA_OO_Unit2_多线程电梯调度</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-04-20T15:47:50.000Z" title="发表于 2025-04-20 23:47:50">2025-04-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-04-20T15:48:45.735Z" title="更新于 2025-04-20 23:48:45">2025-04-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="BUAA-2025-Unit2-多线程电梯调度"><a href="#BUAA-2025-Unit2-多线程电梯调度" class="headerlink" title="BUAA_2025_Unit2_多线程电梯调度"></a>BUAA_2025_Unit2_多线程电梯调度</h1><p>在正式开始之前，我们先简单回顾一下三次作业：</p>
+<ul>
+<li>输入指定电梯的乘客请求，利用生产者-消费模式实现乘客运算</li>
+<li>增加调度请求，不再指定乘客电梯，新增<code>receive</code>约束</li>
+<li>实现双轿厢电梯改造</li>
+</ul>
+<h3 id="第一次作业分析"><a href="#第一次作业分析" class="headerlink" title="第一次作业分析"></a>第一次作业分析</h3><h4 id="1-1-UML类图"><a href="#1-1-UML类图" class="headerlink" title="1.1 UML类图"></a>1.1 UML类图</h4><p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/%E6%9C%AA%E5%91%BD%E5%90%8D%E7%BB%98%E5%9B%BE%20(1).png" alt="hw5"></p>
+<h4 id="1-2架构分析"><a href="#1-2架构分析" class="headerlink" title="1.2架构分析"></a>1.2架构分析</h4><p>通过对指导书的分析，我们可以将任务分为三个线程：</p>
+<ul>
+<li><strong>InputHandler：</strong> 输入处理线程，将输入请求存储到主队列。</li>
+<li><strong>Schedule:</strong>  调度器线程，将主队列的请求分发至对应电梯的子队列</li>
+<li><strong>Elevator</strong>: 电梯线程，将乘客运送至目的地</li>
+</ul>
+<h5 id="调度器派发请求"><a href="#调度器派发请求" class="headerlink" title="调度器派发请求"></a>调度器派发请求</h5><p>本次作业中，虽然对于每一个请求均指定了对应的电梯，可以在<code>InputHandler</code>中就将对应请求派发至对应电梯对应等待队列。但是考虑到后续迭代可能得复杂性以及降低耦合度等考虑，我还是设计了一个调度器——<strong><code>Schedule</code></strong>,主要负责将主队列的请求分配至对应电梯的子队列。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">dispatch</span><span class="params">(Person person)</span> &#123;</span><br><span class="line">    subQueues.get(person.getElevatorId()).addRequest(person);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="电梯线程与调度策略相分略"><a href="#电梯线程与调度策略相分略" class="headerlink" title="电梯线程与调度策略相分略"></a>电梯线程与调度策略相分略</h5><p>对于电梯我们进行了”<code>	电梯类与策略类</code>“的分离，策略类依据<code>LOOK</code>算法，接受当前电梯的楼层、电梯内部人数与运行方向等信息作为参数，向电梯传入运行指令<code>MOVE</code>&#x2F;<code>WAIT</code>&#x2F;<code>REVERSE</code>&#x2F;<code>OPEN</code>&#x2F;<code>END</code>等</p>
+<h6 id="LOOK电梯调度算法"><a href="#LOOK电梯调度算法" class="headerlink" title="LOOK电梯调度算法"></a>LOOK电梯调度算法</h6><ul>
+<li>初始时候为电梯规定一个初始方向</li>
+<li>电梯到达某一楼层时候，首先判断是否需要开门(<strong>OPEN</strong>)<ul>
+<li>如果电梯内有人到底目的楼层，则开门让乘客出去</li>
+<li>发现该楼层中有人想要上电梯，且电梯非满员，乘客想要移动方向与电梯当前方向相同</li>
+</ul>
+</li>
+<li>接下来判断电梯内部是否有人<ul>
+<li>如果电梯里面有人，则沿着当前移动方向继续移动到下一层(<strong>MOVE</strong>)</li>
+<li>如果电梯里面没人，则检查当前电梯所服务的请求队列是否为空<ul>
+<li>如果请求队列为空，且当前子队列线程没有结束，则电梯停留等待(<strong>WAIT</strong>)</li>
+<li>如果请求队列未空，且当前子队列线程已经结束，则电梯线程结束(<strong>EOF</strong>)</li>
+<li>如果请求队列非空，且存在某请求的出发地是电梯“前方”(<strong>MOVE</strong>)</li>
+<li>如果请求队列非空，且所有请求的出发地是电梯“后方”或与电梯同楼层但是目的地在后方，则电梯转向(<strong>REVERSE</strong>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>具体在<code>Stragety</code>中实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Command <span class="title function_">getCommand</span><span class="params">(<span class="type">int</span> curFloor, <span class="type">int</span> direction, <span class="type">int</span> personNumInElevator)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (canPersonOut(curFloor, personNumInElevator)</span><br><span class="line">            || canPersonIn(curFloor, direction, personNumInElevator)) &#123;</span><br><span class="line">        <span class="keyword">return</span> Command.OPEN;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (personNumInElevator != <span class="number">0</span>) &#123;        <span class="comment">// 电梯里面有人</span></span><br><span class="line">        <span class="keyword">return</span> Command.MOVE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (requestsQueue.isEmpty()) &#123;   <span class="comment">// 请求队列为空</span></span><br><span class="line">        <span class="keyword">if</span> (requestsQueue.isEnd()) &#123;</span><br><span class="line">            <span class="keyword">return</span> Command.END;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Command.WAIT;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;    <span class="comment">// 请求队列不为空</span></span><br><span class="line">        <span class="keyword">if</span> (isAheadExistReq(curFloor, direction)) &#123;</span><br><span class="line">            <span class="keyword">return</span> Command.MOVE;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Command.REVERSE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而电梯线程只需要按照策略类给出的指令执行即可</p>
+<h5 id="生产者-消费者模型与线程安全设计"><a href="#生产者-消费者模型与线程安全设计" class="headerlink" title="生产者-消费者模型与线程安全设计"></a>生产者-消费者模型与线程安全设计</h5><p>在该情景中，<code>InputHandler</code>是生产者，提供需求。而<code>Elevator</code>是消费者，“消费请求”。所以主队列<code>MainQueue</code>和子队列<code>SubQueue</code>就是线程间的共享对象，为了保证线程安全性，我们需要对其进行加锁。</p>
+<ul>
+<li><p>在共享对象类中，我主要采用了<code>synchronized</code>对所有方法加锁以确保线程安全，并在方法结束前进行<code>notifyAll()</code>唤醒等待线程</p>
+<blockquote>
+<p>但是需要注意的是可能存在<code>虚拟唤醒</code>情况，在下述情况中<code>wait</code>可能被<code>isEmpty()</code>方法等虚拟唤醒，所以wait结束之后队列可能依旧为空，所以依旧有必要进行队列非空检查</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> Person <span class="title function_">removeFromMainToSub</span><span class="params">()</span> &#123;</span><br><span class="line">     <span class="keyword">if</span> (isEmpty() &amp;&amp; !isInputEnd()) &#123;</span><br><span class="line">         <span class="comment">// 暂时没有请求但是输入并没有结束，将锁交给其他线程inputHandler,为其增加请求</span></span><br><span class="line">         <span class="keyword">try</span> &#123;</span><br><span class="line">             wait();</span><br><span class="line">         &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">             <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">if</span> (isEmpty()) &#123;</span><br><span class="line">         notifyAll();</span><br><span class="line">         <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     ...</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li><p>在电梯线程中，我采用的是<code>synchronized</code>对于对象加锁，例如在<code>Elevator.java</code>中</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (command == Command.WAIT) &#123;</span><br><span class="line">      <span class="keyword">synchronized</span> (requestsQueue) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                requestsQueue.wait();</span><br><span class="line">              &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">              &#125;</span><br><span class="line">           &#125;</span><br><span class="line">         &#125; </span><br></pre></td></tr></table></figure></blockquote>
+</li>
+<li><p>同时为各类的非可变成员变量加上了<code>final</code>字段，进一步增强代码安全性</p>
+<ul>
+<li><p>final 字段修饰非引用数据类型：该数据不可再被改变，适合一次赋值变量，例如<code>id</code></p>
+</li>
+<li><p>final字段修饰引用数据类型：该引用不可变，但是引用所指向对象的内容可变。例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Holder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// list引用不可变，但内容可变，需同步修改操作</span></span><br><span class="line">        list.add(item); <span class="comment">// 可以</span></span><br><span class="line">    	list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(...); <span class="comment">// 错误 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> <code>synchronized</code>用法总结</p>
+</li>
+<li><p><strong>同步代码块</strong>（锁对象需显式指定）<code>synchronized (lockObject) &#123;// 临界区代码&#125;</code></p>
+</li>
+<li><p><strong>实例方法</strong>（锁对象为当前实例 <code>this</code>）<code>public synchronized void method() &#123;// 临界区代码&#125;</code></p>
+</li>
+<li><p><strong>静态方法</strong>（锁对象为类的 <code>Class</code> 对象,同一类的所有对象）<code>public static synchronized void staticMethod() &#123;// 临界区代码&#125;</code></p>
+</li>
+</ul>
+<h4 id="1-3性能优化"><a href="#1-3性能优化" class="headerlink" title="1.3性能优化"></a>1.3性能优化</h4><p>此次作业中我并没有进行过多性能优化(甚至可以说没有)</p>
+<ul>
+<li>在电梯对应的子队列中，按照请求优先级进对请求排序，优先处理优先级高的队列</li>
+<li>在电梯开门让到达目的地乘客出去之后，再次请求策略类电梯是否转向，再让乘客进入电梯。（减少电梯<code>OPEN</code>-<code>OUT</code>-<code>CLOSE</code>-(<code>REVERSE</code>)-<code>OPEN</code>-<code>IN</code>-<code>CLOSE</code>这种情况为<code>OPEN</code>-<code>OUT</code>-<code>IN</code>-<code>CLOSE</code>，减少耗电量)</li>
+</ul>
+<p>实际上，含有一个可以优化的是如果电梯满员时候有优先级更高的人要上电梯，那么可以”踢出”已经在电梯内的优先级比较低的人换成优先级高的乘客。</p>
+<h4 id="1-4-Bug测试"><a href="#1-4-Bug测试" class="headerlink" title="1.4 Bug测试"></a>1.4 Bug测试</h4><p>在此次作业的强测和互测中，我均没有出现<code>bug</code></p>
+<p>在互测中，我hack了同房间的一位同学的bug,主要是产生了<code>NullPointerException</code>问题。</p>
+<p>测试点如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[3.0]1-PRI-1-FROM-B1-TO-F3-BY-6</span><br><span class="line">[3.0]2-PRI-2-FROM-B1-TO-F7-BY-6</span><br><span class="line">[3.0]3-PRI-3-FROM-B1-TO-F7-BY-6</span><br><span class="line">[3.0]4-PRI-4-FROM-B1-TO-F7-BY-6</span><br><span class="line">[3.0]5-PRI-5-FROM-B1-TO-F7-BY-6</span><br><span class="line">[3.0]6-PRI-6-FROM-B1-TO-F7-BY-6</span><br><span class="line">[3.0]7-PRI-7-FROM-B1-TO-F7-BY-6</span><br></pre></td></tr></table></figure>
+
+<p>在观察代码之后，我发现该同学在电梯满员且有优先级更高的乘客想要上电梯时候</p>
+<p>，会将电梯内部优先级低的乘客踢出去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">numKick</span> <span class="operator">=</span> getWantInRequest() + curNum - maxNum;</span><br></pre></td></tr></table></figure>
+
+<p>之后会才从电梯内部的乘客表类中删除<code>numKick</code>个乘客。但是如果是这种情况就会出错</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getWantInRequest() = <span class="number">10</span></span><br><span class="line">curNum = <span class="number">1</span>;</span><br><span class="line">maxNum = <span class="number">6</span>;</span><br></pre></td></tr></table></figure>
+
+<p>这就会导致出现<code>numKick</code> 大于<code>curNum</code>,在遍历删除更新该条请求信息时候可能会触发空指针错误。</p>
+<h5 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h5><p>在本次作业中，我第一次搭建了我的评测机，但是由于题目的并发性等特殊特点，我的测试效果并不是很好。</p>
+<ul>
+<li>测试时间长：利用官方包进行按时投放数据。那么每一次测试数据投放结束并获取输出可能需要50s左右。同时我又采取了串行测试，没有利用多线程测试，导致测试时间异常长。<strong>下一次作业我一定要采用多线程测试(…)</strong></li>
+<li>并发性不好：在数据生成中，我采用了50s范围内生成70-100条数据，这就导致了同一时刻发出请求数很少，可能难以达到压力测试特点。在研讨课听了同学的分享之后，我计划采用分阶段测试：将测试点分为正常段和压力测试段。在压力测试端，缩小时间尺度并相对增大该时间尺度内的指令条数，可以增大测试点压力。</li>
+</ul>
+<blockquote>
+<p>感谢研讨课同学有关自动化测试的分享，受益匪浅。</p>
+</blockquote>
+<h2 id="第二次作业分析"><a href="#第二次作业分析" class="headerlink" title="第二次作业分析"></a>第二次作业分析</h2><h3 id="架构分析"><a href="#架构分析" class="headerlink" title="架构分析"></a>架构分析</h3><p>此次作业主要新增了以下几点：</p>
+<ul>
+<li>乘客请求不再指定电梯，需要自行设计电梯分配策略</li>
+<li>新增临时调度请求</li>
+<li>新增<code>RECEIVE</code>约束，修改<code>OUT</code>指令输出格式</li>
+</ul>
+<h4 id="UML-类图"><a href="#UML-类图" class="headerlink" title="UML 类图"></a>UML 类图</h4><p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/src.drawio%20(1).png" alt="src.drawio (1)"></p>
+<h4 id="ElevatorManger-管家类的实现与调参分配"><a href="#ElevatorManger-管家类的实现与调参分配" class="headerlink" title="**ElevatorManger**管家类的实现与调参分配"></a>**<code>ElevatorManger</code>**管家类的实现与调参分配</h4><blockquote>
+<p>由于此次作业需要自行设计乘客分配策略，而在分配时需要综合各电梯运行情况（电梯内乘客数、电梯侯乘表人数等）进行分配，也就是需要掌握电梯的详细信息后并进行适当计算分析。而原有调度器作为线程类，我觉得不是承担此功能的良好角色，故在此基础上，我设计了<code>ElevatorManger</code>进行乘客请求分配，避免调度器线程直接与电梯线程进行交互</p>
+</blockquote>
+<p><code>ElevatorManger</code>采用单例模式，对外提供<code>getInstance()</code>方法,具体成员变量如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ElevatorManager elevatorManager;   </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> HashMap&lt;Integer, SubQueue&gt; subQueues;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> HashMap&lt;Integer, Elevator&gt; elevators;</span><br></pre></td></tr></table></figure>
+
+<p>在调度器线程中调用<code>ElevatorManger</code>的<code>dispatch(personRequest)</code>方法，将待分发指令传递给<code>ElevatorManger</code>,同时实现<code>calcPerformance()</code>方法去对乘客请求与电梯运行情况的匹配度进行评分。根据评分具体决定乘客应该派发给哪部电梯。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">double</span> <span class="variable">result</span> <span class="operator">=</span> -<span class="number">1</span> * distance + <span class="number">1</span> * isDirSame - <span class="number">2.5</span> * perNumInEle - <span class="number">2.5</span> * reqNum - <span class="number">10</span> * isSche;   <span class="comment">//电梯方向，电梯内部人数，电梯请求队列人数，电梯是否正在调度</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>由于时间原因，未进行参数调试，所以性能不佳</p>
+<p>此外，我并未将电梯的电量因素纳入到性能评价函数中</p>
+</blockquote>
+<h4 id="调度请求的处理"><a href="#调度请求的处理" class="headerlink" title="调度请求的处理"></a>调度请求的处理</h4><p>我的调度请求处理流程如下：</p>
+<ul>
+<li><p><code>scheRequest</code>传递至电梯线程，<code>strategy</code>类发出<code>SCHE</code>指令</p>
+</li>
+<li><p>输出<code>begin</code></p>
+</li>
+<li><p><code>subQueue.removeReqFromSubtoMain</code>，将电梯的侯乘队列的乘客(已经receive给对应电梯)重新移动到主队列进行调度，自动解除<code>receive</code>关系</p>
+</li>
+<li><pre><code class="language-java">while(curFloor != sche.getToFloor()) &#123;
+    move(sche.getSpeed());
+&#125;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 输出OPEN指令，并`removePersonInEleToMain()`将电梯内乘客全都释放</span><br><span class="line"></span><br><span class="line">- 休眠1s后依次输出`CLOSE`和`END`</span><br><span class="line"></span><br><span class="line">- `removeReqFromBufferToSub`，将电梯缓冲区乘客移动至电梯侯乘子队列</span><br><span class="line"></span><br><span class="line">##### `Buffer`缓冲区设置</span><br><span class="line"></span><br><span class="line">由于电梯在执行调度请求期间不可以进行`receive`操作，同时为了避免6部电梯同时调度时候乘客请求无法及时分配需要新增`wait`操作(每加一个wait,都会让我对TLE多一份担心)。基于此，我对每部电梯均设置了缓冲区队列，即使电梯在调度，也会为其分配请求，只不过电梯会将其存入`buffer`中，在调度结束之后将`buffer`中乘客统一移动[`removeReqFromBufferToSub`]到换乘表中并输出`RECEIVE`</span><br><span class="line"></span><br><span class="line">#### `OUT`处理</span><br><span class="line"></span><br><span class="line">在电梯释放乘客时，检查当前楼层是否是乘客请求目标楼层。如若不是目标楼层，修改请求出发层，并将该条请求重新加入主队列中</span><br><span class="line"></span><br><span class="line">&gt; 由于主队列与多个线程与方法交互，我将其设置为了单例对象，方便调用</span><br><span class="line"></span><br><span class="line">#### bug测试与优化</span><br><span class="line"></span><br><span class="line">&gt; 强测一个测试点5分，性能最多就能卷三四分。所以为了正确性保证，我将工作中心放在了测试上。事实上也确实测出了1个bug,所以**赚啦**</span><br><span class="line"></span><br><span class="line">由于独自搭建评测机耗费了大量时间，以至于我没有进行参数调试以进行分配策略优化，所以性能分很低。（总之就是没有进行额外优化）</span><br><span class="line"></span><br><span class="line">我的强侧与互测中均没有出现`bug`。在互测中利用评测机测出了房友bug，但无奈交到互测平台并没有成功</span><br><span class="line"></span><br><span class="line">我在提交前自己测出了`TLE`的bug，主要是由于在从侯乘队列中取乘客时候，如果队列为空则执行了wait，而不会被正常唤醒</span><br><span class="line"></span><br><span class="line">## 第三次作业分析</span><br><span class="line"></span><br><span class="line">**本次作业主要新增双轿厢电梯改造**</span><br><span class="line"></span><br><span class="line">### UML 类图</span><br><span class="line"></span><br><span class="line">![src.drawio (2)](https://raw.githubusercontent.com/KingCB0501/imageHost/main/src.drawio%20(2).png)</span><br><span class="line"></span><br><span class="line">### 双轿厢电梯设计</span><br><span class="line"></span><br><span class="line">#### 调参函数特判</span><br><span class="line"></span><br><span class="line">由于改造为双轿厢电梯之后，电梯不能到达所有楼层。例如目标楼层为4层且为上层电梯的话，则其不能接到出发楼层为3层及以下的乘客，所以需要在调度策略中保证乘客请求一定不会分发给对应电梯。否则对应乘客请求无法完成</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">if ((isA &amp;&amp; personFromFloor &lt; transferFloor) || (!isA &amp;&amp; personFromFloor &gt; transferFloor)) &#123;</span><br><span class="line">    result = -1 * Double.MAX_VALUE;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+<h4 id="transferFloor与isA变量设置"><a href="#transferFloor与isA变量设置" class="headerlink" title="transferFloor与isA变量设置"></a><code>transferFloor</code>与<code>isA</code>变量设置</h4><p>为实现双轿厢电梯与普通电梯的统一管理，我们在原有电梯类中新增成员变量<code>isA</code>与<code>transferFloor</code>,<code>isA</code>为一个<code>boolean</code>类型变量，代表其是否为双轿厢电梯上层A电梯，<code>transferFloor</code>存储其作为双轿厢电梯的换乘楼层。其初始值为下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.isA = <span class="literal">true</span>;</span><br><span class="line">      <span class="built_in">this</span>.transferFloor = -<span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>代表电梯初始可以到达-100层及F7层，符合普通电梯的运行范围。且在<code>canPersonOut</code>等的判断逻辑中，需要增加<code>curFloor = transferFloor</code>时的特殊判断，而由于普通电梯永远无法达到<code>transferFloor</code>,所以只需要在原有hw6基础作增加判断就可以了，不改变原有逻辑</p>
+<h4 id="同时性判断"><a href="#同时性判断" class="headerlink" title="同时性判断"></a>同时性判断</h4><p>由于改造为双轿厢的电梯存在共用换成层等行为，所以两电梯之间存在联系。我新建了工具类<code>coordinate</code>来完成双轿厢改造工作以及换乘层分配，将工具类作为成员变量在两电梯之间共享</p>
+<p>由于一次双轿厢改造请求只能输出一组<code>update_begin</code>与<code>update_end</code>,所以需要在两电梯间进行同时性设置，<code>begin</code>之前两电梯均已做好准备工作，<code>end</code>前均已完成改造工作。具体伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">startUpdate</span><span class="params">(Update update, Coordinate coordinate)</span> &#123;</span><br><span class="line">    	personInEleOut(); <span class="comment">// 电梯内乘客出去</span></span><br><span class="line">       coordinate.addAcceptCount();  <span class="comment">// 告诉coordinate当前电梯线程已经准备好改造</span></span><br><span class="line">       <span class="keyword">while</span>(!coordinate.isReadyForUpdate()) &#123;</span><br><span class="line">           <span class="built_in">this</span>.coordinate.wait();   <span class="comment">// 如果另一电梯没有准备好则等待</span></span><br><span class="line">       &#125;</span><br><span class="line">       coordinate.isBeginPrint();    <span class="comment">// coordinate中无论该方法被调用多少次，只输出一次begin</span></span><br><span class="line">       removeReqFromSubToMain();     <span class="comment">// 取消已经receive相关请求</span></span><br><span class="line">       resetStatus();                <span class="comment">// 电梯状态重置</span></span><br><span class="line">       coordinate.addFinishCount();  <span class="comment">// 告诉coordinate当前电梯线程已经完成改造</span></span><br><span class="line">       <span class="keyword">while</span>(!coordinate.isFinishUpdate()) &#123;</span><br><span class="line">           <span class="built_in">this</span>.coordinate.wait();   <span class="comment">// 如果另一电梯没有完成则等待</span></span><br><span class="line">       &#125;</span><br><span class="line">       subQueue.finishUpdate();       <span class="comment">// 清除update指令</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="共享楼层分配与锁的设置"><a href="#共享楼层分配与锁的设置" class="headerlink" title="共享楼层分配与锁的设置"></a>共享楼层分配与锁的设置</h4><p>为了防止配对电梯在共享楼层相撞，我们需要<strong>给共享楼层加锁</strong>，当电梯想要到达换乘楼层，调用<code>coordinate</code>中的<code>lock</code>方法(如若获取不成功，则等待)，而离开换乘楼层时调用<code>unlock</code>方法，同时唤醒等待线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">lockransferFloor</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (isOccupied) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            wait();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    isOccupied = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">unlockTransferFloor</span><span class="params">()</span> &#123;</span><br><span class="line">    isOccupied = <span class="literal">false</span>;</span><br><span class="line">    notifyAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>为了避免双轿厢电梯在共享楼层时接到<code>WAIT</code>指令而一直占用共享楼层，我们在执行<code>wait</code>指令前特判当前楼层是否是共享楼层。如果是，则进行强制移动(题目中特意提到这不受receive约束，相比是为了提醒我们这件事吧)</p>
+<h3 id="bug测试"><a href="#bug测试" class="headerlink" title="bug测试"></a>bug测试</h3><p>我在本次作业的强测与互测中均没有出现bug。</p>
+<p>在课下自己debug中，我主要采取的<code>TimbleOut.println(&quot;#日志&quot;)</code>,即日志信息以”#”开头标记，在评测机的checker判断中忽略”#”开头的日志信息。在评测机判断输出错误时，会保留错误输出，自然其中也保留了当时的错误信息来帮助<code>debug</code></p>
+<h2 id="迭代过程中的稳定与变化内容"><a href="#迭代过程中的稳定与变化内容" class="headerlink" title="迭代过程中的稳定与变化内容"></a>迭代过程中的稳定与变化内容</h2><p>在三次作业中，我并未进行重构工作，整体项目表现出了一定的稳定性。</p>
+<p>稳定内容：</p>
+<ul>
+<li>策略类几乎不变。只在第三次作业加入双轿厢之后对于是否会有乘客进出进行了新的特殊判断(在共享楼层要将无法送达的乘客送出电梯)</li>
+<li>电梯原有的开关门，移动等的设计。我对一些基本的开关门以及移动等封装为了单独的函数。在加入调度与改造指令之后，我采用单个<code>sche()</code>方法等完全实现其指令，并未对原有部分进行修改。<del>增量并非增改</del></li>
+<li>…</li>
+</ul>
+<p>变化内容：</p>
+<ul>
+<li>调度策略有所改变。第一次作业直接指定电梯，第二次作业中我新增了<code>ElevatorManger</code>实现电梯信息存储并调度其中的<code>dispatch</code>实现调参分配</li>
+<li>线程结束的标志改变：从<code>输入线程结束且主队列为空</code>到<code>输入线程结束&amp;&amp;主队列为空&amp;&amp;调度指令结束</code>到<code>输入线程结束&amp;&amp;主队列为空&amp;&amp;调度指令结束&amp;&amp;改造指令结束&amp;&amp;乘客指令全部完成</code></li>
+</ul>
+<h2 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h2><p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/image-20250420173218754.png" alt="image-20250420173218754"></p>
+<h2 id="新的迭代场景"><a href="#新的迭代场景" class="headerlink" title="新的迭代场景"></a>新的迭代场景</h2><ul>
+<li>乘客请求对关门时间的主观控制：参考现实乘梯经验，电梯关门往往是乘客按下关门按钮后触发关门操作的。可以为每条乘客请求增加是否会主动关门属性。如果电梯内乘客均不会主动关门，则在最大时间后电梯自动关门。否则依据电梯出入人次决定开关门时间，之后由乘客主动关门。这可能只需要在电梯线程的开关门操作<code>openAndClose</code>中对要出入的乘客属性与人次进行统计分析处理即可</li>
+<li>电梯在预设时间段内部分楼层不可达：可以在输入中新增电梯置位指令,例如<code>Set-6-F1-F7-15-30</code>指令可以使得6号电梯在15-30秒之间只可以到达F1-F7层。这可能需要为电梯增加最低楼层与最高楼层属性，并为<code>ElevatorManger</code>和<code>Elevator</code>增加与可达层范围设置相关的方法。</li>
+</ul>
+<blockquote>
+<p>感觉想的这两个迭代场景都是小打小闹，并不会带来什么技术性的实现难度</p>
+</blockquote>
+<h2 id="程序结构度量"><a href="#程序结构度量" class="headerlink" title="程序结构度量"></a>程序结构度量</h2><h4 id="代码规模统计"><a href="#代码规模统计" class="headerlink" title="代码规模统计"></a>代码规模统计</h4><p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/image-20250413110917125.png" alt="image-20250413110917125"></p>
+<p>本次作业代码总计行数达到了1000行。第一次迭代约480行，第二、三次各约增量500行。其中三个线程类<code>InputHandler</code>约为50行，<code>Schedule</code>约为34行，但是<code>Elvevator</code>线程达到了350行。我个人认为作为线程对象，拥有这么多方法是不合理的，即使这可能是因为电梯本身业务比较多。一个好的解决办法可能是新建一个业务类，作为电梯线程的成员变量，在其中实现<code>move</code>,<code>open</code>等具体功能。<del>可能由于我认为线程对象最好只实现run方法的偏见</del></p>
+<p>其次，主队列与子队列作为各线程之间的信息传递者，承担功能多，不可避免的代码体积较多。</p>
+<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/image-20250413164059306.png" alt="image-20250413164059306"></p>
+<p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/image-20250413164129051.png" alt="image-20250413164129051"></p>
+<ul>
+<li><p><code>Elevator.run()</code>方法的复杂度是最高的，这主要是由于分支较多并且调用了众多其他方法导致的.此外我并没有想到什么好的办法或结构可以降低这个方法的复杂度</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">        <span class="type">Command</span> <span class="variable">command</span> <span class="operator">=</span> Strategy.getCommand();</span><br><span class="line">        <span class="keyword">if</span>(command == Command.MOVE)&#123;</span><br><span class="line">            move();</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(command == Command.OPEN)&#123;</span><br><span class="line">            openAndClose();</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>()&#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>Strategy.canPersonOut()</code>方法的认知复杂度<code>CogC</code>复杂度较高，这可能是由于地三次迭代中双轿厢电梯的迭代引起的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Person person : personInElevator) &#123;</span><br><span class="line">    <span class="keyword">if</span>(person.getToFloor == curFloor) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(curFloor == transferFloor &amp;&amp; isA &amp;&amp; person.getToFloor() &lt; transferFloor) &#123;   <span class="comment">// 当前楼层为双轿厢电梯换成层且为A号电梯且乘客目标楼层在换乘楼层以下</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(curFloor == transferFloor &amp;&amp; !isA &amp;&amp; person.getToFloor() &gt; transferFloor) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>…</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/image-20250413165921591.png" alt="image-20250413165921591"></p>
+<p>而各类的加权平均复杂度也为<code>Elevator</code>和<code>SubQueue</code>最高</p>
+<h4 id="类间的耦合度分析"><a href="#类间的耦合度分析" class="headerlink" title="类间的耦合度分析"></a>类间的耦合度分析</h4><p>为了最大限度的降低两个线程间的耦合度（以防因为一个线程等待或睡眠而影响另一个线程），我在每两个需要交互的线程之间都设置了<strong>缓冲区</strong>，<code>InputHandler(Thread) -- MainQueue -- Schedule(Thread) -- ElevatorManger -- SubQueue - Elevator(Thread)</code>，由于调参策略需要六部电梯的信息，但是让6个电梯线程与调度线程交互的话线程间交互信息太多。所以我的<code>ElevatorManger</code>便起到了缓冲作用，同时降低两个线程之间的耦合度。</p>
+<p>其次由于<code>MainQueue</code>中判断线程结束的条件为<code>InputHandler.End()&amp;&amp;mainQueue.isEmpty()&amp;&amp;updateCount==0&amp;&amp;scheCount==0&amp;&amp;unfinishedPerson==0</code>，所以在<strong>接受乘客请求与送达目的地，调度之后，改造前后</strong>均涉及到对主队列中的某些计数变量的修改，所以我将其设为了单例模式，方便各类对其访问。但这无疑增加了主队列与其他类之间的耦合度</p>
+<h2 id="心得体会"><a href="#心得体会" class="headerlink" title="心得体会"></a>心得体会</h2><p>多线程编程中最容易出的问题就是线程安全问题。我个人采用的主要是<code>synchornized</code>对于共享对象的方法加锁与部分引用处<code>synchronized(obj)</code>加锁。通过本单元学习，我认为应该注意以下的线程安全问题：</p>
+<ul>
+<li>分清哪些对象是共享对象（即会被多个线程访问的对象）。然后根据需要判断是在共享对象类中采用方法块加锁或是<code>synchronized(obj)</code>加锁</li>
+<li>对于每一个<code>wait()</code>方法判断什么方法应该唤醒它，该方法处是否加了正确的<code>notifyAll()</code>，以及在while循环中使用wait等待，避免意外唤醒</li>
+<li>避免将容器作为参数或返回值传递，避免<code>ConcurrentModificationExceptio</code>问题</li>
+<li>线程的正常启动与结束</li>
+<li>…</li>
+</ul>
+<p>本单元的顶层是生产者和消费者模型,<code>InputHandler</code>输入，<code>Schedule</code>调度派发，<code>Elevator</code>完成消费者功能与输出。其次为了实现线程间的安全交互，我们在两个线程间设置了<code>MainQueue</code>和<code>SubQueue</code>等共享对象。同时为每个电梯实现自己的策略类，为一组双轿厢电梯实现相同的<code>coordinate</code>协作。</p>
+<p>非常感谢<a target="_blank" rel="noopener" href="https://github.com/MercuryRecords/BUAA_OO_2024">学长</a>的评测机分享，对我搭建评测机帮助巨大。</p>
+<p>也感谢<a target="_blank" rel="noopener" href="https://hyggge.github.io/">https://hyggge.github.io/</a>与<a target="_blank" rel="noopener" href="https://github.com/zhangyitonggg/BUAA-2024-OO">https://github.com/zhangyitonggg/BUAA-2024-OO</a>两位学长的分享，我在代码架构设计过程中学习了其很多。</p>
+<h2 id="未来方向"><a href="#未来方向" class="headerlink" title="未来方向"></a>未来方向</h2><p>我觉得电梯设计可以更考虑实际一点，比如开关们时间与电梯内要进出的乘客数量相关，且可以增加乘客请求属性，比如该乘客是否会主动按按钮关闭电梯，如若电梯内有此类乘客，可以缩小关门时间等。且某部电梯在某一个可能的高峰段（可能是预设的）只可可能在一个较小的区间运行（例如某部电梯在15-20s之间不会去地下楼层）</p>
+<p>此外，是否有办法可以增强互测压力或者在为每个互测房间设置一个讨论区。由于多线程的随机性，我们的本地测试出错样例交到平台可能并不会触发错误，如果这时有互测房间的讨论区的话我们可以直接告诉房友其出错的样例点，避免可能单元结束其某个错误依旧没有被修正</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://KingCB0501.github.io">KingCB0501</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kingcb0501.github.io/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/">https://kingcb0501.github.io/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://KingCB0501.github.io" target="_blank">KingCB</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">面向对象</a></div><div class="post-share"><div class="social-share" data-image="/images/avatar_img.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降"><img class="cover" src="/images/OO_unit1/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">BUAA_2025_Unit1_表达式解析与递归下降</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降"><img class="cover" src="/images/OO_unit1/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-03-22</div><div class="info-item-2">BUAA_2025_Unit1_表达式解析与递归下降</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">KingCB0501</div><div class="author-info-description">面朝大海, 春暖花开</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/KingCB0501"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#BUAA-2025-Unit2-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text">BUAA_2025_Unit2_多线程电梯调度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90"><span class="toc-number">1.0.1.</span> <span class="toc-text">第一次作业分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-UML%E7%B1%BB%E5%9B%BE"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">1.1 UML类图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="toc-number">1.0.1.2.</span> <span class="toc-text">1.2架构分析</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E5%99%A8%E6%B4%BE%E5%8F%91%E8%AF%B7%E6%B1%82"><span class="toc-number">1.0.1.2.1.</span> <span class="toc-text">调度器派发请求</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%B5%E6%A2%AF%E7%BA%BF%E7%A8%8B%E4%B8%8E%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5%E7%9B%B8%E5%88%86%E7%95%A5"><span class="toc-number">1.0.1.2.2.</span> <span class="toc-text">电梯线程与调度策略相分略</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#LOOK%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6%E7%AE%97%E6%B3%95"><span class="toc-number">1.0.1.2.2.1.</span> <span class="toc-text">LOOK电梯调度算法</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.0.1.2.3.</span> <span class="toc-text">生产者-消费者模型与线程安全设计</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">1.0.1.3.</span> <span class="toc-text">1.3性能优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-4-Bug%E6%B5%8B%E8%AF%95"><span class="toc-number">1.0.1.4.</span> <span class="toc-text">1.4 Bug测试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="toc-number">1.0.1.4.1.</span> <span class="toc-text">自动化测试</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%BD%9C%E4%B8%9A%E5%88%86%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">第二次作业分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="toc-number">1.1.1.</span> <span class="toc-text">架构分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UML-%E7%B1%BB%E5%9B%BE"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">UML 类图</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ElevatorManger-%E7%AE%A1%E5%AE%B6%E7%B1%BB%E7%9A%84%E5%AE%9E%E7%8E%B0%E4%B8%8E%E8%B0%83%E5%8F%82%E5%88%86%E9%85%8D"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">**ElevatorManger**管家类的实现与调参分配</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E5%BA%A6%E8%AF%B7%E6%B1%82%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">调度请求的处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#transferFloor%E4%B8%8EisA%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">transferFloor与isA变量设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E6%80%A7%E5%88%A4%E6%96%AD"><span class="toc-number">1.1.1.5.</span> <span class="toc-text">同时性判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B1%E4%BA%AB%E6%A5%BC%E5%B1%82%E5%88%86%E9%85%8D%E4%B8%8E%E9%94%81%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.1.1.6.</span> <span class="toc-text">共享楼层分配与锁的设置</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bug%E6%B5%8B%E8%AF%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">bug测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E7%A8%B3%E5%AE%9A%E4%B8%8E%E5%8F%98%E5%8C%96%E5%86%85%E5%AE%B9"><span class="toc-number">1.2.</span> <span class="toc-text">迭代过程中的稳定与变化内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="toc-number">1.3.</span> <span class="toc-text">时序图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%9C%BA%E6%99%AF"><span class="toc-number">1.4.</span> <span class="toc-text">新的迭代场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84%E5%BA%A6%E9%87%8F"><span class="toc-number">1.5.</span> <span class="toc-text">程序结构度量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%84%E6%A8%A1%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">代码规模统计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-number">1.5.0.2.</span> <span class="toc-text">复杂度分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E9%97%B4%E7%9A%84%E8%80%A6%E5%90%88%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-number">1.5.0.3.</span> <span class="toc-text">类间的耦合度分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%83%E5%BE%97%E4%BD%93%E4%BC%9A"><span class="toc-number">1.6.</span> <span class="toc-text">心得体会</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AA%E6%9D%A5%E6%96%B9%E5%90%91"><span class="toc-number">1.7.</span> <span class="toc-text">未来方向</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/04/20/BUAA_OO_Unit2_%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%94%B5%E6%A2%AF%E8%B0%83%E5%BA%A6/" title="BUAA_OO_Unit2_多线程电梯调度">BUAA_OO_Unit2_多线程电梯调度</a><time datetime="2025-04-20T15:47:50.000Z" title="发表于 2025-04-20 23:47:50">2025-04-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降"><img src="/images/OO_unit1/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUAA_2025_Unit1_表达式解析与递归下降"/></a><div class="content"><a class="title" href="/2025/03/22/BUAA-2025-Unit1-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%80%92%E5%BD%92%E4%B8%8B%E9%99%8D/" title="BUAA_2025_Unit1_表达式解析与递归下降">BUAA_2025_Unit1_表达式解析与递归下降</a><time datetime="2025-03-22T14:38:10.000Z" title="发表于 2025-03-22 22:38:10">2025-03-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/05/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95%E6%8E%A2%E8%AE%A8/" title="Java中equals方法探讨"><img src="/images/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95/HEAD.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Java中equals方法探讨"/></a><div class="content"><a class="title" href="/2025/03/05/Java%E4%B8%ADequal%E6%96%B9%E6%B3%95%E6%8E%A2%E8%AE%A8/" title="Java中equals方法探讨">Java中equals方法探讨</a><time datetime="2025-03-05T12:06:21.000Z" title="发表于 2025-03-05 20:06:21">2025-03-05</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/top_img.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By KingCB0501</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="9125417643" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
