@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>lab0-实验报告 | KingCB</title><meta name="author" content="KingCB0501"><meta name="copyright" content="KingCB0501"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ThinkingThinking 0.1Q: 对于README.txt文件，在初次创建并提交后与再次修改之后git status的状态的不同A:  二者git status之后的结果不同。第一次add之前显示的是未跟踪的文件，属于Untractked状态，原因是我们的文件没有被add过，没有提交到暂存区过。而commit之后再做修改，显示尚未暂存以备提交的变更，属于Modified状态，原因是我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab0-实验报告">
+<meta property="og:url" content="https://kingcb0501.github.io/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="KingCB">
+<meta property="og:description" content="ThinkingThinking 0.1Q: 对于README.txt文件，在初次创建并提交后与再次修改之后git status的状态的不同A:  二者git status之后的结果不同。第一次add之前显示的是未跟踪的文件，属于Untractked状态，原因是我们的文件没有被add过，没有提交到暂存区过。而commit之后再做修改，显示尚未暂存以备提交的变更，属于Modified状态，原因是我们">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kingcb0501.github.io/images/OS/cover0.jpg">
+<meta property="article:published_time" content="2025-06-28T03:19:05.000Z">
+<meta property="article:modified_time" content="2025-06-28T03:27:24.482Z">
+<meta property="article:author" content="KingCB0501">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kingcb0501.github.io/images/OS/cover0.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "lab0-实验报告",
+  "url": "https://kingcb0501.github.io/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/",
+  "image": "https://kingcb0501.github.io/images/OS/cover0.jpg",
+  "datePublished": "2025-06-28T03:19:05.000Z",
+  "dateModified": "2025-06-28T03:27:24.482Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "KingCB0501",
+      "url": "https://kingcb0501.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon_img.jpg"><link rel="canonical" href="https://kingcb0501.github.io/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'lab0-实验报告',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/OS/cover0.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">lab0-实验报告</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">lab0-实验报告</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-28T03:19:05.000Z" title="发表于 2025-06-28 11:19:05">2025-06-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-28T03:27:24.482Z" title="更新于 2025-06-28 11:27:24">2025-06-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Thinking"><a href="#Thinking" class="headerlink" title="Thinking"></a>Thinking</h1><h2 id="Thinking-0-1"><a href="#Thinking-0-1" class="headerlink" title="Thinking 0.1"></a>Thinking 0.1</h2><p><strong>Q</strong>: <strong>对于<code>README.txt</code>文件，在初次创建并提交后与再次修改之后<code>git status</code>的状态的不同</strong><br><strong>A</strong>:  二者<code>git status</code>之后的结果不同。第一次add之前显示的是<code>未跟踪的文件</code>，属于<code>Untractked</code>状态，原因是我们的文件没有被add过，没有提交到暂存区过。而commit之后再做修改，显示<code>尚未暂存以备提交的变更</code>，属于<code>Modified</code>状态，原因是我们已经commit到暂存区且之后又做了修改。</p>
+<h2 id="Thinking-0-2"><a href="#Thinking-0-2" class="headerlink" title="Thinking 0.2"></a>Thinking 0.2</h2><p><strong>Q</strong>: <strong><code>Add the file</code>、 <code>statge the  file</code> 与<code>commit</code>分别对应哪条命令?</strong><br><strong>A</strong>: <code>Add the file</code>对应 <code>git add &lt;文件&gt;</code>命令<br>       <code>stage the file</code> 对应的也是<code>git add &lt;文件&gt;</code>命令<br>       <code>commit</code>对应是 <code>git commit -m &quot;comment&quot;</code></p>
+<h2 id="Thinking-0-3"><a href="#Thinking-0-3" class="headerlink" title="Thinking 0.3"></a>Thinking 0.3</h2><p><strong>Q1</strong>: <strong>代码文件print.c被错误删除时，应当使用什么命令将其恢复?</strong><br><strong>A1</strong>: <code>git checkout -- print.c</code><br><strong>Q2</strong>: <strong>代码文件print.c被错误删除后，执行了<code>git rm print.c</code>命令，此时应当<br>使用什么命令将其恢复?</strong><br><strong>A2</strong>: 先执行<code>git reset HEAD print.c</code>，再执行<code>git checkout -- print.c</code><br><strong>Q3</strong>: <strong>无关文件hello.txt已经被添加到暂存区时，如何在不删除此文件的前提下将其移出暂存区?</strong><br><strong>A3</strong>: <code>git rm --cached hello.txt</code></p>
+<h2 id="Thingking-0-4"><a href="#Thingking-0-4" class="headerlink" title="Thingking 0.4"></a>Thingking 0.4</h2><p><strong>Q</strong>: <strong>对于<code>git reset --hard</code>的用法理解</strong><br><strong>A</strong>:使用<code>git reset --hard</code>指令，我们可以将当前仓库状态变为任意一次<code>commit</code>之后的状态，可以实现版本回退，也可回到最新。主要有以下两种用法：  </p>
+<ul>
+<li>利用<code>HEAD</code>, <code>git reset --hard HEAD^</code>回退到上个版本，<code>git reset --hard HEAD^^</code>回退到上上个版本，回退到前num个版本，可以使用<code>git reset --hard HEAD~num</code>,num为合法数字</li>
+<li>利用<code>hash</code>值，<code>git reset --hard &lt;hash&gt;</code>可以切换到任意版本，hash值可以通过<code>git log</code>查看</li>
+</ul>
+<p><strong>注意</strong> ：<strong>添加<code>--hard</code>选项之后命令效果无法撤销</strong></p>
+<h2 id="Thinking-0-5"><a href="#Thinking-0-5" class="headerlink" title="Thinking 0.5"></a>Thinking 0.5</h2><p><strong>Q</strong>:执行如下命令，并查看结果   </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- echo first</span><br><span class="line">- echo econd &gt; output.txt</span><br><span class="line">- echo third &gt; output.txt</span><br><span class="line">- echo forth &gt;&gt; output.txt</span><br></pre></td></tr></table></figure>
+
+<p><strong>A</strong>:执行结果如下：<br><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/lab0_Thingking0.5.png" alt="lab0_Thinking0.5"></p>
+<blockquote>
+<p><code>&gt;</code>是将输出重定向到文件中，如果该文件存在，则原内容被覆盖，否则新建文件<br><code>&gt;&gt;</code>是将输出追加到源文件内容之后 </p>
+</blockquote>
+<h2 id="Thinking-0-6"><a href="#Thinking-0-6" class="headerlink" title="Thinking 0.6"></a>Thinking 0.6</h2><p><strong>Q</strong> <strong>使用你知道的方法（包括重定向）创建下图内容的文件（文件命名为test），将创建该文件的命令序列保存在command文件中，并将test文件作为批处理文件运行，将运行结果输出至result文件中。给出command文件和result文件的内容，并对最后的结果进行解释说明（可以从test文件的内容入手）. 具体实现的过程中思考下列问题: echo <code>echo Shell Start</code> 与 <code>echo </code>echo Shell Start<code> </code>效果是否有区别; echo echo $c&gt;file1与echo <code>echo $c&gt;file1</code> 效果是否有区别</strong><br><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/test.png" alt="test"></p>
+<p><strong>A</strong> command文件的内容如下<br><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/command.png" alt="command"><br>result文件内容如下<br><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/result.png" alt="result"></p>
+<p><strong>结果说明</strong> 在test中将 a,b依次赋值为1和2，然后令c&#x3D;a+b，此时c为3，接着将c,a,b依次写入<code>file1,file2,file3</code>，然后将<code>file1,file2,file3</code>依次追加写入<code>file4</code>，将file4的内容又写入了<code>result</code><br><code>echo echo Shell Start</code>与<code>echo &#39;echo Shell Start&#39;</code>没有区别；但是<code>echo echo $c&gt;file1</code>与<code>echo &#39;echo $c&gt;file1</code>由区别，前者将<code>echo $c</code>重定向到file1，但是后者会在终端显示<code>echo $c&gt;file1</code>字符串。</p>
+<h1 id="实验难点"><a href="#实验难点" class="headerlink" title="实验难点"></a>实验难点</h1><h2 id="Linux命令"><a href="#Linux命令" class="headerlink" title="Linux命令"></a>Linux命令</h2><ol>
+<li><code>cp [选项] 源文件 目标路径</code> &amp;&amp; <code>mv [选项] 源文件 目标路径</code></li>
+</ol>
+<p>前者为将源文件(或者为目录)复制为目标路径对应的文件(如果目标路径是文件)或者复制到目标路径(如果目标路径是目录)，后者是移动(也可以实现重命名)<br>注意目标路径是目录还是文件的判断</p>
+<ol start="2">
+<li>查找命令<code>grep</code>与<code>find</code></li>
+</ol>
+<ul>
+<li><code>find -name &lt;文件名&gt;</code></li>
+<li><code>grep [选项] pattern [file/dictionary]</code>   (选项：<code>-n</code>:显示行号 <code>-r</code>: 从目录递归查找)<br>注意：如果是在目录中查找，需要加上<code>-r</code>选项<br>不加目录或者文件参数时，默认在当前目录查找，此时不要忘记加<code>-n</code><br>如果模式串中含有空格，最好用引号引起来</li>
+</ul>
+<h2 id="Shell编程中括号的使用"><a href="#Shell编程中括号的使用" class="headerlink" title="Shell编程中括号的使用"></a>Shell编程中括号的使用</h2><ul>
+<li><code>$()</code>或者将括号改为反引号：运行括号中的命令并将其返回</li>
+<li><code>(())</code> 双小括号用于数值计算，前面加上<code>$</code>符号表示将值返回。此外，<code>(())</code>也用于整数大小的判断，例如 <code>if (( $1 &gt; $2 ))</code></li>
+<li><code>$var_name</code> 或者<code>$&#123;var_name&#125;</code> 一般表示取变量的值</li>
+<li><code>[]</code> 用于判断条件是否成立</li>
+<li><code>[[]]</code> 用于判断条件是否成立，同时可以在条件间进行逻辑运算</li>
+</ul>
+<h2 id="Git使用与理解"><a href="#Git使用与理解" class="headerlink" title="Git使用与理解"></a>Git使用与理解</h2><ol>
+<li><code>git status</code>与文件的四种状态<br>熟练使用<code>git status</code>命令与<code>git log</code>查看文件状态和提交日志</li>
+<li><code>Git</code>三棵树–<code>工作区、暂存区、HEAD</code><br><img src="https://raw.githubusercontent.com/KingCB0501/imageHost/main/%E4%B8%89%E6%A3%B5%E6%A0%91.png" alt="三棵树"></li>
+<li>Git版本回退以及分支</li>
+</ol>
+<blockquote>
+<p>Git学习参考<a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2">https://git-scm.com/book/zh/v2</a></p>
+</blockquote>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
+<li><code>ctags</code>使用<br>对于通过<code>#include &quot;filename&quot;</code>定义变量，在命令行中执行命令<code>ctags-R *</code>,便可以建立映射表tags,将光标定位到调用处，使用<code>ctrl+]</code>便可以定位到定义处，按下<code>ctrl + T</code>或者<code>ctrl + O</code>便可以回到跳转前位置</li>
+</ol>
+<h1 id="实验体会与感想"><a href="#实验体会与感想" class="headerlink" title="实验体会与感想"></a>实验体会与感想</h1><p>lab0 主要学习了如何在Linux终端进行文件以及目录的操作，实验整体难度不大。主要的不适应可能来源于从图形化界面转为命令行界面，不过这可以通过多加练习来习惯。此外，各种命令的正确使用可能也存在一点难度，例如参数以及选项的正确设置等。  </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://KingCB0501.github.io">KingCB0501</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kingcb0501.github.io/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">https://kingcb0501.github.io/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://KingCB0501.github.io" target="_blank">KingCB</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post-share"><div class="social-share" data-image="/images/OS/cover0.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/08/BUAA-OO-Unit4-UML%E4%B8%8E%E6%AD%A3%E5%90%91%E5%BB%BA%E6%A8%A1/" title="BUAA_OO_Unit4 UML与正向建模"><img class="cover" src="/images/OO_unit4/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">BUAA_OO_Unit4 UML与正向建模</div></div><div class="info-2"><div class="info-item-1">BUAA_OO_Unit4 UML与正向建模 先来简单回顾一下本单元完成的任务：利用UML进行正向建模，并完成一个小型的图书馆管理系统  hw13:实现借阅，预约，预约取书，还书等基本流程 hw14:...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab1-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab1-实验报告"><img class="cover" src="/images/OS/cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">lab1-实验报告</div></div><div class="info-2"><div class="info-item-1">Thingking 1.3Q: Thinking 1.1 在阅读 附录中的编译链接详解 以及本章内容后，尝试分别使用实验环境中 的原生 x86 工具链（gcc、ld、readelf、objdump 等）和 MIPS 交叉编译工具链（带有 mips-linux-gnu- 前缀，如 mips-linux-gnu-gcc、mips-linux-gnu-ld），重复其中的编译和解析过程，观察相应的结果，并解释其中向objdump传入的参数的含义。 A: 我们对于示例代码test_hello.c进行测试 123456#include &lt;stdio.h&gt;int main() &#123;    printf(&quot;Hello, World!\n&quot;);    return 0;&#125;   使用原生工具链 123gcc -o test_hello test_hello.creadelf -h test_helloobjdump -d test_hello  利用readelf查看文件头信息得到：   反汇编得到     MIPS...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/06/28/lab1-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab1-实验报告"><img class="cover" src="/images/OS/cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab1-实验报告</div></div><div class="info-2"><div class="info-item-1">Thingking 1.3Q: Thinking 1.1 在阅读 附录中的编译链接详解 以及本章内容后，尝试分别使用实验环境中 的原生 x86 工具链（gcc、ld、readelf、objdump 等）和 MIPS 交叉编译工具链（带有 mips-linux-gnu- 前缀，如 mips-linux-gnu-gcc、mips-linux-gnu-ld），重复其中的编译和解析过程，观察相应的结果，并解释其中向objdump传入的参数的含义。 A: 我们对于示例代码test_hello.c进行测试 123456#include &lt;stdio.h&gt;int main() &#123;    printf(&quot;Hello, World!\n&quot;);    return 0;&#125;   使用原生工具链 123gcc -o test_hello test_hello.creadelf -h test_helloobjdump -d test_hello  利用readelf查看文件头信息得到：   反汇编得到     MIPS...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab3-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab3-实验报告"><img class="cover" src="/images/OS/cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab3-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 3.1 请结合MOS中的页目录自映射应用解释代码中e-&gt;env_pgdir[PDX(UVPT)] &#x3D; PADDR(e-&gt;env_pgdir) | PTE_V 的含义。  A:使得env_pgdir对应的二级页表结构中虚拟地址UVPT对应存储一级页表地址 Thinking 3.2  elf_load_seg 以函数指针的形式，接受外部自定义的回调函数 map_page。 请你找到与之相关的data这一参数在此处的来源，并思考它的作用。没有这个参数可不可 以？为什么？  A:data在此处的来源为load_icode,也就是进程控制块的指针。不可以没有这个参数。如果没有，回调函数中无法通过进程控制块获取页目录地址以及asid。 Thinking 3.3 结合 elf_load_seg...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab2-实验报告"><img class="cover" src="/images/OS/cover2.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab2-实验报告</div></div><div class="info-2"><div class="info-item-1">THINKINGThinking 2.1Q:：在编写的 C 程序中，指针变量中存储的地址 被视为虚拟地址，还是物理地址？MIPS 汇编程序中 lw和sw 指令使用的地址被视为虚 拟地址，还是物理地址? **A:**均为虚拟地址 Thinking 2.2Q2.2.1 从可重用性角度阐述用宏实现链表的好处 A：使用宏实现链表的优势在于代码的泛化能力与模块化设计。宏既实现了函数模块化和代码复用的功能，同时可以通过参数化传递数据类型或者结构体名称，使得链表不依赖与某种具体的数据类型 Q2.2.2 分析include&#x2F;queue.h 中单向链表、循环链表和双向链表在插入与删除操作上的性能差异 A:   单项链表：只可以获取当前项的下一项 插入：可以在某一元素之后与链表头部直接插入(O(1)),若需要在某一项前面插入，需要遍历页表 （O(n)） 删除：遍历删除   双向链表：可以获取某一项的前后两项   在某一元素前后插入和删除的时间复杂度都是(O(1))   循环链表：插入和删除同单向链表   三种链表查询效率均为(O(n))  Thinking...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab4-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab4-实验报告"><img class="cover" src="/images/OS/cover4.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab4-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 4.1内核在保存现场的时候是如何避免破坏通用寄存器的？  在陷入内核后PC指向了exc_gen_entry,在其中首先调用了SAVE_ALL宏，SAVE_ALL宏将所有寄存器保存在内核栈中。并在异常处理程序结束前调用RESTORE_ALL将保存的所有通用寄存器值恢复。  系统陷⼊内核调⽤后可以直接从当时的 $a0-$a3 参数寄存器中得到⽤户调⽤ msyscall 留下的信息吗？  可以。msyscall函数被调用时候，$a0-$a3中存储了前四个参数，在执行syscall并陷入内核到执行sys_*过程中，参数寄存器并不会发生改变。（不过在SAVE_ALL中这几个寄存器的值也被保存了）  我们是怎么做到让 sys 开头的函数“认为”我们提供了和用户调⽤ msyscall...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告"><img class="cover" src="/images/OS/cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab5-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 5.1 如果通过 kseg0 读写设备，那么对于设备的写入会缓存到 Cache 中。这是 一种错误的行为，在实际编写代码的时候这么做会引发不可预知的问题。请思考：这么做 这会引发什么问题？对于不同种类的设备（如我们提到的串口设备和IDE磁盘）的操作会 有差异吗？可以从缓存的性质和缓存更新的策略来考虑。  由于cache更新不及时等问题，可能在访问内核时错误读取到设备内容 例如外设发生内容改变，但是cpu不会吧这个改变直接写入cache，导致下一次从cache读取设备内容读取到未更新的值而错误 串口设备由于即时性与高使用频率，比IDE设备更加可能出现此类错误 Thinking 5.2 查找代码中的相关定义，试回答一个磁盘块中最多能存储多少个文件控制块？一个目录下最多能有多少个文件？我们的文件系统支持的单个文件最大为多大？  123#define PAGE_SIZE 4096#define FILE_STRUCT_SIZE 256#define BLOCK_SIZE PAGE_SIZE  一个磁盘块最多能容纳文件控制块 4096&#x2F;256...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告"><img class="cover" src="/images/OS/cover6.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab6-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 6.1 示例代码中，父进程操作管道的写端，子进程操作管道的读端。如果现在想 让父进程作为“读者”，代码应当如何修改？   1234567891011121314151617181920212223242526272829#include &lt;stdlib.h&gt;#include &lt;unistd.h&gt;int fildes[2];char buf[100];int status;int main()&#123;    status = pipe(fildes);    if (status == -1) &#123;        printf(&quot;error\n&quot;);    &#125;    switch (fork()) &#123;    case -1:        break;    case 0: /*子进程-作为管道的写者*/        close(fildes[0]); /*关闭不用的读端*/        write(fildes[1], &quot;Hello...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">KingCB0501</div><div class="author-info-description">面朝大海, 春暖花开</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/KingCB0501"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Thinking"><span class="toc-number">1.</span> <span class="toc-text">Thinking</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Thinking-0-1"><span class="toc-number">1.1.</span> <span class="toc-text">Thinking 0.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thinking-0-2"><span class="toc-number">1.2.</span> <span class="toc-text">Thinking 0.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thinking-0-3"><span class="toc-number">1.3.</span> <span class="toc-text">Thinking 0.3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thingking-0-4"><span class="toc-number">1.4.</span> <span class="toc-text">Thingking 0.4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thinking-0-5"><span class="toc-number">1.5.</span> <span class="toc-text">Thinking 0.5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thinking-0-6"><span class="toc-number">1.6.</span> <span class="toc-text">Thinking 0.6</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E9%9A%BE%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">实验难点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E5%91%BD%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">Linux命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shell%E7%BC%96%E7%A8%8B%E4%B8%AD%E6%8B%AC%E5%8F%B7%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">Shell编程中括号的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Git%E4%BD%BF%E7%94%A8%E4%B8%8E%E7%90%86%E8%A7%A3"><span class="toc-number">2.3.</span> <span class="toc-text">Git使用与理解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">2.4.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A%E4%B8%8E%E6%84%9F%E6%83%B3"><span class="toc-number">3.</span> <span class="toc-text">实验体会与感想</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/shell-Challenge-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="shell-Challenge-实验报告"><img src="/images/OS/shell.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="shell-Challenge-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/shell-Challenge-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="shell-Challenge-实验报告">shell-Challenge-实验报告</a><time datetime="2025-06-28T03:20:42.000Z" title="发表于 2025-06-28 11:20:42">2025-06-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告"><img src="/images/OS/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lab6-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告">lab6-实验报告</a><time datetime="2025-06-28T03:20:19.000Z" title="发表于 2025-06-28 11:20:19">2025-06-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告"><img src="/images/OS/cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lab5-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告">lab5-实验报告</a><time datetime="2025-06-28T03:20:09.000Z" title="发表于 2025-06-28 11:20:09">2025-06-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/OS/cover0.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By KingCB0501</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="9125417643" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

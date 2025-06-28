@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>lab2-实验报告 | KingCB</title><meta name="author" content="KingCB0501"><meta name="copyright" content="KingCB0501"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="THINKINGThinking 2.1Q:：在编写的 C 程序中，指针变量中存储的地址 被视为虚拟地址，还是物理地址？MIPS 汇编程序中 lw和sw 指令使用的地址被视为虚 拟地址，还是物理地址? **A:**均为虚拟地址 Thinking 2.2Q2.2.1 从可重用性角度阐述用宏实现链表的好处 A：使用宏实现链表的优势在于代码的泛化能力与模块化设计。宏既实现了函数模块化和代码复用的功能，同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lab2-实验报告">
+<meta property="og:url" content="https://kingcb0501.github.io/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="KingCB">
+<meta property="og:description" content="THINKINGThinking 2.1Q:：在编写的 C 程序中，指针变量中存储的地址 被视为虚拟地址，还是物理地址？MIPS 汇编程序中 lw和sw 指令使用的地址被视为虚 拟地址，还是物理地址? **A:**均为虚拟地址 Thinking 2.2Q2.2.1 从可重用性角度阐述用宏实现链表的好处 A：使用宏实现链表的优势在于代码的泛化能力与模块化设计。宏既实现了函数模块化和代码复用的功能，同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kingcb0501.github.io/images/OS/cover2.jpg">
+<meta property="article:published_time" content="2025-06-28T03:19:41.000Z">
+<meta property="article:modified_time" content="2025-06-28T03:29:16.867Z">
+<meta property="article:author" content="KingCB0501">
+<meta property="article:tag" content="OS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kingcb0501.github.io/images/OS/cover2.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "lab2-实验报告",
+  "url": "https://kingcb0501.github.io/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/",
+  "image": "https://kingcb0501.github.io/images/OS/cover2.jpg",
+  "datePublished": "2025-06-28T03:19:41.000Z",
+  "dateModified": "2025-06-28T03:29:16.867Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "KingCB0501",
+      "url": "https://kingcb0501.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon_img.jpg"><link rel="canonical" href="https://kingcb0501.github.io/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'lab2-实验报告',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: [object Object];"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/OS/cover2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">KingCB</span></a><a class="nav-page-title" href="/"><span class="site-name">lab2-实验报告</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives"><span> 文章归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories"><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags"><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link"><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about"><span> 关于我</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">lab2-实验报告</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-06-28T03:19:41.000Z" title="发表于 2025-06-28 11:19:41">2025-06-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-06-28T03:29:16.867Z" title="更新于 2025-06-28 11:29:16">2025-06-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="THINKING"><a href="#THINKING" class="headerlink" title="THINKING"></a>THINKING</h2><h3 id="Thinking-2-1"><a href="#Thinking-2-1" class="headerlink" title="Thinking 2.1"></a>Thinking 2.1</h3><p><strong>Q:：在编写的 C 程序中，指针变量中存储的地址 被视为虚拟地址，还是物理地址？MIPS 汇编程序中 lw和sw 指令使用的地址被视为虚 拟地址，还是物理地址?</strong></p>
+<p>**A:**均为虚拟地址</p>
+<h3 id="Thinking-2-2"><a href="#Thinking-2-2" class="headerlink" title="Thinking 2.2"></a>Thinking 2.2</h3><p><strong>Q2.2.1 从可重用性角度阐述用宏实现链表的好处</strong></p>
+<p><strong>A</strong>：使用宏实现链表的优势在于代码的泛化能力与模块化设计。宏既实现了函数模块化和代码复用的功能，同时可以通过参数化传递数据类型或者结构体名称，使得链表不依赖与某种具体的数据类型</p>
+<p><strong>Q2.2.2 分析include&#x2F;queue.h 中单向链表、循环链表和双向链表在插入与删除操作上的性能差异</strong></p>
+<p><strong>A</strong>: </p>
+<ul>
+<li>单项链表：只可以获取当前项的下一项<ul>
+<li>插入：可以在某一元素之后与链表头部直接插入(<strong>O(1)</strong>),若需要在某一项前面插入，<strong>需要遍历页表</strong> （<strong>O(n)</strong>）</li>
+<li>删除：遍历删除</li>
+</ul>
+</li>
+<li>双向链表：可以获取某一项的前后两项  <ul>
+<li>在某一元素前后插入和删除的时间复杂度都是(<strong>O(1)</strong>)</li>
+</ul>
+</li>
+<li>循环链表：插入和删除同单向链表</li>
+</ul>
+<blockquote>
+<p>三种链表查询效率均为(<strong>O(n)</strong>)</p>
+</blockquote>
+<h3 id="Thinking-2-3"><a href="#Thinking-2-3" class="headerlink" title="Thinking 2.3"></a>Thinking 2.3</h3><p><strong>Q:Page_list的展开结构为</strong></p>
+<p><strong>A</strong>: 我选择C选项</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page_list</span>&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Page</span> * <span class="title">lh_first</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Page</span> &#123;</span></span><br><span class="line">  	<span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">Page</span>* <span class="title">le_next</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">Page</span>**<span class="title">le_prev</span>;</span></span><br><span class="line">    &#125;pp_link;</span><br><span class="line">    u_short pp_ref;   <span class="comment">// 指向该页面的指针数量</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Thinking-2-4"><a href="#Thinking-2-4" class="headerlink" title="Thinking 2.4"></a>Thinking 2.4</h3><p>**Q:**回答以下问题</p>
+<blockquote>
+<ul>
+<li>请阅读上面有关TLB的描述，从虚拟内存和多进程操作系统的实现角度，阐述ASID 的必要性。</li>
+<li>请阅读 MIPS 4Kc 文档《MIPS32® 4K™ Processor Core Family Software User’s Manual》的 Section 3.3.1 与 Section 3.4，结合 ASID 段的位数，说明 4Kc 中可容纳 不同的地址空间的最大数量</li>
+</ul>
+</blockquote>
+<p><strong>A</strong>：<strong>ASID的必要性</strong></p>
+<ul>
+<li>在多进程操作系统中.不同进程拥有独立的虚拟地址空间，同一虚拟地址往往映射至不同的物理地址。ASID可以用于唯一标识物理地址空间</li>
+<li>在进程切换时，使用ASID可以避免完全重写TLB与缓存，加快地址转换速度</li>
+<li>ASID为内存管理提供了额外保障，确保每个进程只访问自己地址空间内的内存，阻止进程越界访问。</li>
+</ul>
+<h3 id="Thinking-2-5"><a href="#Thinking-2-5" class="headerlink" title="Thinking 2.5"></a>Thinking 2.5</h3><p>**Q：**回答以下问题</p>
+<blockquote>
+<ul>
+<li>tlb_invalidate和tlb_out的调用关系？</li>
+<li>请用一句话概括tlb_invalidate的作用。</li>
+<li>逐行解释tlb_out中的汇编代码。</li>
+</ul>
+</blockquote>
+<p><strong>A:</strong> </p>
+<ul>
+<li><p><code>tlb_invalidate</code>调用 <code>tlb_out</code>，向其传入旧表项的key</p>
+</li>
+<li><p><code>tlb_invalidate</code>实现删除特定虚拟地址在TLB中的旧表项</p>
+</li>
+<li><pre><code class="language-MIPS">LEAF(tlb_out)
+.set noreorder
+    mfc0    t0, CP0_ENTRYHI   // 将当前的CP0_ENTRYHI保存
+    mtc0    a0, CP0_ENTRYHI   // 将需要七清楚的表项的key写入CP0_ENTRYHI
+    nop      // 冒险处理
+    /* Step 1: Use &#39;tlbp&#39; to probe TLB entry */
+    /* Exercise 2.8: Your code here. (1/2) */
+    tlbp                    // 查找key对应的表项的索引
+    nop
+    /* Step 2: Fetch the probe result from CP0.Index */
+    mfc0    t1, CP0_INDEX        // key对应的表项的索引存入t1
+.set reorder
+    bltz    t1, NO_SUCH_ENTRY    // 如果t1是负的，及没有找到对应表项则跳转到NO_SUCH_ENTRY
+.set noreorder
+    mtc0    zero, CP0_ENTRYHI     // 将CP0_ENTRYHI，CP0_ENTRYLo清0
+    mtc0    zero, CP0_ENTRYLO0
+    mtc0    zero, CP0_ENTRYLO1
+    nop
+    /* Step 3: Use &#39;tlbwi&#39; to write CP0.EntryHi/Lo into TLB at CP0.Index  */
+    /* Exercise 2.8: Your code here. (2/2) */
+    tlbwi                       // 将CP0_ENTRYHI与CP0_ENTRYLo写入到index对应表项，实现表项清空
+.set reorder
+
+NO_SUCH_ENTRY:
+    mtc0    t0, CP0_ENTRYHI    // 写回初始CP0_ENTRYHI（存有当前进程ASID）
+    j       ra                 //返回
+END(tlb_out) 
+</code></pre>
+</li>
+</ul>
+<h3 id="Thinking-2-6"><a href="#Thinking-2-6" class="headerlink" title="Thinking 2.6"></a>Thinking 2.6</h3><p>**Q:**请结合 Lab2 开始的 CPU 访存流程与下图中的 Lab2 用户函数部分，尝试 将函数调用与CPU访存流程对应起来，思考函数调用与CPU访存流程的关系。</p>
+<p><strong>A:</strong></p>
+<p>![66eccfd03d0a3a8e0ebef559fd4fc0c](C:\Users\Lenovo\Documents\WeChat Files\wxid_uzb3tdk2mb6p22\FileStorage\Temp\66eccfd03d0a3a8e0ebef559fd4fc0c.jpg)</p>
+<h3 id="Thinking-2-7"><a href="#Thinking-2-7" class="headerlink" title="Thinking 2.7"></a>Thinking 2.7</h3><p>**Q:**从下述三个问题中任选其一回答：</p>
+<blockquote>
+<ul>
+<li>简单了解并叙述X86体系结构中的内存管理机制，比较X86和MIPS 在内存管理 上的区别。</li>
+<li>简单了解并叙述RISC-V 中的内存管理机制，比较RISC-V 与 MIPS 在内存管理上 的区别。</li>
+<li>简单了解并叙述LoongArch 中的内存管理机制，比较 LoongArch 与 MIPS 在内存 管理上的区别。</li>
+</ul>
+</blockquote>
+<p><strong>A:</strong> <code>RISC-V</code>采用基于页面的虚拟内存系统</p>
+<ul>
+<li><strong>分页模式与页表结构</strong>：RISC-V 支持多种分页模式（如 Sv32、Sv39、Sv48），分别对应 32 位、39 位、48 位虚拟地址空间。每个页表项（PTE）包含物理页号（PPN）、权限位（读、写、执行）、用户模式访问位（U）等。物理地址通过逐级页表遍历完成转换。</li>
+<li><strong>MMU</strong>:页表基地址寄存器 <code>satp</code> 存储根页表物理地址和分页模式,硬件自动遍历页表，若缺页或权限错误，触发监管者模式异常，由操作系统处理。同时支持灵活的页大小，允许大页映射优化</li>
+<li><strong>物理内存保护</strong>：PMP配置寄存器定义物理内存区域的访问权限</li>
+</ul>
+<p>与<code>MIPS</code>区别：</p>
+<ul>
+<li><strong>TLB管理</strong>：<code>RISC-V</code>由硬件自动遍历页表，<code>MIPS</code>由软件管理,TLB触发异常时操作系统需手动遍历页表并填充 TLB</li>
+<li><strong>地址空间分布</strong>：<code>RISC-V</code>无固定化用户与内核态划分，而<code>MIPs</code>固定划分用户段与内核段</li>
+<li><strong>分页灵活性</strong>：<code>RISC-V</code>支持多级动态页表，而<code>MIPS</code>仅支持固定层级页表</li>
+</ul>
+<h3 id="Thinking-A-1"><a href="#Thinking-A-1" class="headerlink" title="Thinking A.1"></a>Thinking A.1</h3><p>**Q:**页目录自映射</p>
+<blockquote>
+<p> 在现代的 64 位系统中，提供了 64 位的字长，但实际上不是 64 位页式存 储系统。假设在64位系统中采用三级页表机制，页面大小4KB。由于64位系统中字长为 8B，且页目录也占用一页，因此页目录中有512 个页目录项，因此每级页表都需要9位。 因此在64位系统下，总共需要3×9+12&#x3D;39位就可以实现三级页表机制，并不需要64 位</p>
+<p> 现考虑上述39位的三级页式存储系统，虚拟地址空间为512GB，若三级页表的基地 址为PTbase，请计算：</p>
+<ul>
+<li>三级页表页目录的基地址。</li>
+<li>映射到页目录自身的页目录项（自映射）。</li>
+</ul>
+</blockquote>
+<p><strong>A:</strong> 页目录及地址<br>$$<br>\begin{aligned} PD_{base}&amp;&#x3D;PT_{base}+(PT_{base}&gt;&gt;12)&lt;&lt;3+((PT_{base}&gt;&gt;12)&lt;&lt;3)&gt;&gt;12&lt;&lt;3\ \end{aligned}<br>$$<br>子映射页目录项：<br>$$<br>\begin{aligned} PDE_{self-mapping}&amp;&#x3D;PD_{base}+(PD_{base}&gt;&gt;9)&lt;&lt;3\ \end{aligned}<br>$$</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="实验难点"><a href="#实验难点" class="headerlink" title="实验难点"></a>实验难点</h2><p>我认为该实验的主要难点是与物理内存宏和虚拟内存管理相关的一些宏定义与函数使用</p>
+<p>宏定义：</p>
+<ul>
+<li><code>PDX(va)</code>：页目录偏移量（查找遍历页表时常用）</li>
+<li><code>PTX(va)</code>：页表偏移量（查找遍历页表时常用）</li>
+<li><code>PTE_ADDR(pte)</code>：获取页表项中的物理地址（读取 pte 时常用）</li>
+<li><code>PADDR(kva)</code>：kseg0 处虚地址 → 物理地址</li>
+<li><code>KADDR(pa)</code>：物理地址 → kseg0 处虚地址（读取 pte 后可进行转换）</li>
+<li><code>pa2page(u_long pa)</code>：物理地址 → 页控制块（读取 pte 后可进行转换）</li>
+<li><code>page2pa(struct Page *pp)</code>：页控制块 → 物理地址（填充 pte 时常用）</li>
+<li><code>PPN()</code>：物理地址→物理页框号</li>
+<li>…</li>
+</ul>
+<p>函数：</p>
+<ul>
+<li><p><code>pgdir_walk</code>:页目录检索。在给定二级页表结构中查找对应虚拟地址的页表项</p>
+</li>
+<li><p><code>page_insert</code>:增加地址映射。在给定二级页表结构中将虚拟地址映射到给定对应页控制块的物理页面，设定相应权限为</p>
+</li>
+<li><p><code>page_alloc:</code>用于分配物理页面。将空闲链表头部页控制块对应的物理页面进行相应分配</p>
+</li>
+</ul>
+<h2 id="实验体会"><a href="#实验体会" class="headerlink" title="实验体会"></a>实验体会</h2><p>我觉得整个lab2实验内容是繁杂的，需要耗费不少精力才能准确理解物理内存、虚拟内存与TLB重填相关知识，对于其形成一个整体认知。我对于指导书精度了两遍才实现了这一目标</p>
+<p>其次，一些链表宏、与地址转换相关的宏、函数等工具的理解使用也比较费力，需要不断去翻看指导书学习。</p>
+<p>我在整体学习完之后，通过结构图与流程图等对于知识进行了梳理，加深了理解</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://KingCB0501.github.io">KingCB0501</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kingcb0501.github.io/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/">https://kingcb0501.github.io/2025/06/28/lab2-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://KingCB0501.github.io" target="_blank">KingCB</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OS/">OS</a></div><div class="post-share"><div class="social-share" data-image="/images/OS/cover2.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/06/28/lab1-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab1-实验报告"><img class="cover" src="/images/OS/cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">lab1-实验报告</div></div><div class="info-2"><div class="info-item-1">Thingking 1.3Q: Thinking 1.1 在阅读 附录中的编译链接详解 以及本章内容后，尝试分别使用实验环境中 的原生 x86 工具链（gcc、ld、readelf、objdump 等）和 MIPS 交叉编译工具链（带有 mips-linux-gnu- 前缀，如 mips-linux-gnu-gcc、mips-linux-gnu-ld），重复其中的编译和解析过程，观察相应的结果，并解释其中向objdump传入的参数的含义。 A: 我们对于示例代码test_hello.c进行测试 123456#include &lt;stdio.h&gt;int main() &#123;    printf(&quot;Hello, World!\n&quot;);    return 0;&#125;   使用原生工具链 123gcc -o test_hello test_hello.creadelf -h test_helloobjdump -d test_hello  利用readelf查看文件头信息得到：   反汇编得到     MIPS...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab3-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab3-实验报告"><img class="cover" src="/images/OS/cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">lab3-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 3.1 请结合MOS中的页目录自映射应用解释代码中e-&gt;env_pgdir[PDX(UVPT)] &#x3D; PADDR(e-&gt;env_pgdir) | PTE_V 的含义。  A:使得env_pgdir对应的二级页表结构中虚拟地址UVPT对应存储一级页表地址 Thinking 3.2  elf_load_seg 以函数指针的形式，接受外部自定义的回调函数 map_page。 请你找到与之相关的data这一参数在此处的来源，并思考它的作用。没有这个参数可不可 以？为什么？  A:data在此处的来源为load_icode,也就是进程控制块的指针。不可以没有这个参数。如果没有，回调函数中无法通过进程控制块获取页目录地址以及asid。 Thinking 3.3 结合 elf_load_seg...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/06/28/lab0-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab0-实验报告"><img class="cover" src="/images/OS/cover0.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab0-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 0.1Q: 对于README.txt文件，在初次创建并提交后与再次修改之后git status的状态的不同A:  二者git status之后的结果不同。第一次add之前显示的是未跟踪的文件，属于Untractked状态，原因是我们的文件没有被add过，没有提交到暂存区过。而commit之后再做修改，显示尚未暂存以备提交的变更，属于Modified状态，原因是我们已经commit到暂存区且之后又做了修改。 Thinking 0.2Q: Add the file、 statge the  file 与commit分别对应哪条命令?A: Add the file对应 git add &lt;文件&gt;命令       stage the file 对应的也是git add &lt;文件&gt;命令       commit对应是 git commit -m &quot;comment&quot; Thinking 0.3Q1: 代码文件print.c被错误删除时，应当使用什么命令将其恢复?A1: git checkout --...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab1-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab1-实验报告"><img class="cover" src="/images/OS/cover1.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab1-实验报告</div></div><div class="info-2"><div class="info-item-1">Thingking 1.3Q: Thinking 1.1 在阅读 附录中的编译链接详解 以及本章内容后，尝试分别使用实验环境中 的原生 x86 工具链（gcc、ld、readelf、objdump 等）和 MIPS 交叉编译工具链（带有 mips-linux-gnu- 前缀，如 mips-linux-gnu-gcc、mips-linux-gnu-ld），重复其中的编译和解析过程，观察相应的结果，并解释其中向objdump传入的参数的含义。 A: 我们对于示例代码test_hello.c进行测试 123456#include &lt;stdio.h&gt;int main() &#123;    printf(&quot;Hello, World!\n&quot;);    return 0;&#125;   使用原生工具链 123gcc -o test_hello test_hello.creadelf -h test_helloobjdump -d test_hello  利用readelf查看文件头信息得到：   反汇编得到     MIPS...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab3-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab3-实验报告"><img class="cover" src="/images/OS/cover3.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab3-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 3.1 请结合MOS中的页目录自映射应用解释代码中e-&gt;env_pgdir[PDX(UVPT)] &#x3D; PADDR(e-&gt;env_pgdir) | PTE_V 的含义。  A:使得env_pgdir对应的二级页表结构中虚拟地址UVPT对应存储一级页表地址 Thinking 3.2  elf_load_seg 以函数指针的形式，接受外部自定义的回调函数 map_page。 请你找到与之相关的data这一参数在此处的来源，并思考它的作用。没有这个参数可不可 以？为什么？  A:data在此处的来源为load_icode,也就是进程控制块的指针。不可以没有这个参数。如果没有，回调函数中无法通过进程控制块获取页目录地址以及asid。 Thinking 3.3 结合 elf_load_seg...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab4-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab4-实验报告"><img class="cover" src="/images/OS/cover4.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab4-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 4.1内核在保存现场的时候是如何避免破坏通用寄存器的？  在陷入内核后PC指向了exc_gen_entry,在其中首先调用了SAVE_ALL宏，SAVE_ALL宏将所有寄存器保存在内核栈中。并在异常处理程序结束前调用RESTORE_ALL将保存的所有通用寄存器值恢复。  系统陷⼊内核调⽤后可以直接从当时的 $a0-$a3 参数寄存器中得到⽤户调⽤ msyscall 留下的信息吗？  可以。msyscall函数被调用时候，$a0-$a3中存储了前四个参数，在执行syscall并陷入内核到执行sys_*过程中，参数寄存器并不会发生改变。（不过在SAVE_ALL中这几个寄存器的值也被保存了）  我们是怎么做到让 sys 开头的函数“认为”我们提供了和用户调⽤ msyscall...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告"><img class="cover" src="/images/OS/cover5.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab5-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 5.1 如果通过 kseg0 读写设备，那么对于设备的写入会缓存到 Cache 中。这是 一种错误的行为，在实际编写代码的时候这么做会引发不可预知的问题。请思考：这么做 这会引发什么问题？对于不同种类的设备（如我们提到的串口设备和IDE磁盘）的操作会 有差异吗？可以从缓存的性质和缓存更新的策略来考虑。  由于cache更新不及时等问题，可能在访问内核时错误读取到设备内容 例如外设发生内容改变，但是cpu不会吧这个改变直接写入cache，导致下一次从cache读取设备内容读取到未更新的值而错误 串口设备由于即时性与高使用频率，比IDE设备更加可能出现此类错误 Thinking 5.2 查找代码中的相关定义，试回答一个磁盘块中最多能存储多少个文件控制块？一个目录下最多能有多少个文件？我们的文件系统支持的单个文件最大为多大？  123#define PAGE_SIZE 4096#define FILE_STRUCT_SIZE 256#define BLOCK_SIZE PAGE_SIZE  一个磁盘块最多能容纳文件控制块 4096&#x2F;256...</div></div></div></a><a class="pagination-related" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告"><img class="cover" src="/images/OS/cover6.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-28</div><div class="info-item-2">lab6-实验报告</div></div><div class="info-2"><div class="info-item-1">ThinkingThinking 6.1 示例代码中，父进程操作管道的写端，子进程操作管道的读端。如果现在想 让父进程作为“读者”，代码应当如何修改？   1234567891011121314151617181920212223242526272829#include &lt;stdlib.h&gt;#include &lt;unistd.h&gt;int fildes[2];char buf[100];int status;int main()&#123;    status = pipe(fildes);    if (status == -1) &#123;        printf(&quot;error\n&quot;);    &#125;    switch (fork()) &#123;    case -1:        break;    case 0: /*子进程-作为管道的写者*/        close(fildes[0]); /*关闭不用的读端*/        write(fildes[1], &quot;Hello...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/avatar_img.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">KingCB0501</div><div class="author-info-description">面朝大海, 春暖花开</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/KingCB0501"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#THINKING"><span class="toc-number">1.</span> <span class="toc-text">THINKING</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-1"><span class="toc-number">1.1.</span> <span class="toc-text">Thinking 2.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-2"><span class="toc-number">1.2.</span> <span class="toc-text">Thinking 2.2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-3"><span class="toc-number">1.3.</span> <span class="toc-text">Thinking 2.3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-4"><span class="toc-number">1.4.</span> <span class="toc-text">Thinking 2.4</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-5"><span class="toc-number">1.5.</span> <span class="toc-text">Thinking 2.5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-6"><span class="toc-number">1.6.</span> <span class="toc-text">Thinking 2.6</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-2-7"><span class="toc-number">1.7.</span> <span class="toc-text">Thinking 2.7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Thinking-A-1"><span class="toc-number">1.8.</span> <span class="toc-text">Thinking A.1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-number">1.9.</span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E9%9A%BE%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">实验难点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%BD%93%E4%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">实验体会</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/shell-Challenge-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="shell-Challenge-实验报告"><img src="/images/OS/shell.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="shell-Challenge-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/shell-Challenge-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="shell-Challenge-实验报告">shell-Challenge-实验报告</a><time datetime="2025-06-28T03:20:42.000Z" title="发表于 2025-06-28 11:20:42">2025-06-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告"><img src="/images/OS/cover6.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lab6-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/lab6-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab6-实验报告">lab6-实验报告</a><time datetime="2025-06-28T03:20:19.000Z" title="发表于 2025-06-28 11:20:19">2025-06-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告"><img src="/images/OS/cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lab5-实验报告"/></a><div class="content"><a class="title" href="/2025/06/28/lab5-%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A/" title="lab5-实验报告">lab5-实验报告</a><time datetime="2025-06-28T03:20:09.000Z" title="发表于 2025-06-28 11:20:09">2025-06-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/OS/cover2.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2025 By KingCB0501</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="9125417643" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
